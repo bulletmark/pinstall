@@ -183,7 +183,7 @@ $ sudo pip3 install -U --use-pep517 --root-user-action=ignore .
 ## Removal
 
 ```sh
-$ sudo pip3 uninstall pinstall
+$ sudo pip3 uninstall --root-user-action=ignore pinstall
 ```
 
 ## License
