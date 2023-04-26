@@ -3,7 +3,8 @@
 Creates a Python virtual environment.
 
 Runs `python -m venv` (optionally for the specified Python name or path
-or pyenv version) to create a venv; upgrades it with the latest pip +
+or pyenv version) to create a venv; adds a .gitignore to it to be
+automatically ignored by git; upgrades the venv with the latest pip +
 setuptools + wheel; then installs all packages from requirements.txt if
 present.
 '''
