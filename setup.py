@@ -11,7 +11,7 @@ here = Path(__file__).resolve().parent
 
 setup(
     name=name,
-    version='1.0',
+    version='1.1',
     description='Installer Tool for Python Programs',
     long_description=here.joinpath('README.md').read_text(),
     long_description_content_type='text/markdown',

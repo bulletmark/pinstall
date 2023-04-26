@@ -9,7 +9,6 @@ present.
 '''
 import shutil
 from pathlib import Path
-from looseversion import LooseVersion as Version
 from ..run import run
 
 DEFDIR = 'venv'
@@ -48,12 +47,24 @@ def main(args):
         if not pyenv_root:
             return 'Error: Can not find pyenv. Is it installed?'
 
-        versions = sorted(Path(pyenv_root, 'versions').glob(f'{args.pyenv}*'),
-                          key=lambda x: Version(x.name))
-        if not versions:
-            return f'Error: no pyenv version {args.pyenv} installed.'
+        basedir = Path(pyenv_root, 'versions')
+        pydir = basedir / args.pyenv
 
-        pyexe = str(versions[-1] / 'bin/python')
+        if not pydir.exists():
+            # Given specific version does not exist, get latest version
+            from looseversion import LooseVersion as Version
+            try:
+                versions = sorted(basedir.glob(f'{args.pyenv}[-.]*'),
+                                key=lambda x: Version(x.name))
+            except:
+                return f'Can not determine pyenv version for {args.pyenv}'
+
+            if not versions:
+                return f'Error: no pyenv version {args.pyenv} installed.'
+
+            pydir = versions[-1]
+
+        pyexe = str(pydir / 'bin/python')
     else:
         pyexe = args.python
 
