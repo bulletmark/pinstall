@@ -34,8 +34,9 @@ def init(parser):
                         help='don\'t upgrade pip/setuptools in venv')
     parser.add_argument('-w', '--no-wheel', action='store_true',
                         help='don\'t install wheel in venv')
-    parser.add_argument('-v', '--verbose', action='store_true',
-                        help='verbose pip install')
+    parser.add_argument('-v', '--verbose', action='count',
+                        help='verbose pip install (can add multiple times to '
+                        'increase verbosity)')
     parser.add_argument('args', nargs='*',
                         help='optional arguments to python -m venv '
                         '(add by starting with "--"). See options in '
@@ -57,7 +58,7 @@ def main(args):
             try:
                 versions = sorted(basedir.glob(f'{args.pyenv}[-.]*'),
                                 key=lambda x: Version(x.name))
-            except:
+            except Exception:
                 return f'Can not determine pyenv version for {args.pyenv}'
 
             if not versions:
@@ -88,8 +89,8 @@ def main(args):
         return
 
     pip = str(vdir / 'bin/pip')
-    if args.verbose:
-        pip += ' --verbose'
+    if args.verbose > 0:
+        pip += ' -' + 'v' * args.verbose
 
     if not args.no_upgrade and '--upgrade-deps' not in args.args:
         run(f'{pip} --disable-pip-version-check install -U pip')
