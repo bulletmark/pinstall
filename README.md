@@ -63,7 +63,8 @@ options:
   -r, --no-require      don't pip install packages from requirements.txt
   -u, --no-upgrade      don't upgrade pip/setuptools in venv
   -w, --no-wheel        don't install wheel in venv
-  -v, --verbose         verbose pip install
+  -v, --verbose         verbose pip install (can add multiple times to
+                        increase verbosity)
 ```
 
 ### Command `status`
