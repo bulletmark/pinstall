@@ -34,7 +34,7 @@ def init(parser):
                         help='don\'t upgrade pip/setuptools in venv')
     parser.add_argument('-w', '--no-wheel', action='store_true',
                         help='don\'t install wheel in venv')
-    parser.add_argument('-v', '--verbose', action='count',
+    parser.add_argument('-v', '--verbose', action='count', default=0,
                         help='verbose pip install (can add multiple times to '
                         'increase verbosity)')
     parser.add_argument('args', nargs='*',
