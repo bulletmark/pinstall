@@ -41,11 +41,11 @@ usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYENV]
 
 Creates a Python virtual environment.
 
-Runs `python -m venv` (optionally for the specified Python name or path
-or pyenv version) to create a venv; adds a .gitignore to it to be
-automatically ignored by git; upgrades the venv with the latest pip +
-setuptools + wheel; then installs all packages from requirements.txt if
-present.
+Runs `python -m venv` (optionally for the specified Python name, or
+path, or pyenv Python version) to create a venv; adds a .gitignore to it
+to be automatically ignored by git; upgrades the venv with the latest
+pip + setuptools + wheel; then installs all packages from
+requirements.txt if present.
 
 positional arguments:
   args                  optional arguments to python -m venv (add by starting
@@ -57,7 +57,8 @@ options:
   -p PYTHON, --python PYTHON
                         python executable, default="python3"
   -P PYENV, --pyenv PYENV
-                        pyenv version to use, i.e. from `pyenv versions`.
+                        pyenv python version to use, i.e. from `pyenv
+                        versions`, e.g. "3.9".
   -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"
   -r, --no-require      don't pip install packages from requirements.txt

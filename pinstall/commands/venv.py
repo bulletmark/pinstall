@@ -2,11 +2,11 @@
 '''
 Creates a Python virtual environment.
 
-Runs `python -m venv` (optionally for the specified Python name or path
-or pyenv version) to create a venv; adds a .gitignore to it to be
-automatically ignored by git; upgrades the venv with the latest pip +
-setuptools + wheel; then installs all packages from requirements.txt if
-present.
+Runs `python -m venv` (optionally for the specified Python name, or
+path, or pyenv Python version) to create a venv; adds a .gitignore to it
+to be automatically ignored by git; upgrades the venv with the latest
+pip + setuptools + wheel; then installs all packages from
+requirements.txt if present.
 '''
 import shutil
 from pathlib import Path
@@ -24,7 +24,8 @@ def init(parser):
     xgroup.add_argument('-p', '--python', default=DEFEXE,
                         help='python executable, default="%(default)s"')
     xgroup.add_argument('-P', '--pyenv',
-                        help='pyenv version to use, i.e. from `pyenv versions`.')
+                        help='pyenv python version to use, '
+                        'i.e. from `pyenv versions`, e.g. "3.9".')
     parser.add_argument('-f', '--requirements-file',
                         help=f'default="{DEFREQ}"')
     parser.add_argument('-r', '--no-require', action='store_true',
