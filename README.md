@@ -36,7 +36,8 @@ individual command:
 
 ```
 usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYENV]
-                        [-f REQUIREMENTS_FILE] [-r] [-u] [-w] [-v]
+                        [-f REQUIREMENTS_FILE] [-r] [-u] [-i [PACKAGE ...]]
+                        [-w] [-v]
                         [args ...]
 
 Creates a Python virtual environment.
@@ -63,6 +64,8 @@ options:
                         default="requirements.txt"
   -r, --no-require      don't pip install packages from requirements.txt
   -u, --no-upgrade      don't upgrade pip/setuptools in venv
+  -i [PACKAGE ...], --install [PACKAGE ...]
+                        also install (1 or more) given packages
   -w, --no-wheel        don't install wheel in venv
   -v, --verbose         verbose pip install (can add multiple times to
                         increase verbosity)

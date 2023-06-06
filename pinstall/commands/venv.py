@@ -33,6 +33,8 @@ def init(parser):
                         'requirements.txt')
     parser.add_argument('-u', '--no-upgrade', action='store_true',
                         help='don\'t upgrade pip/setuptools in venv')
+    parser.add_argument('-i', '--install', nargs='*', metavar='PACKAGE',
+                        help='also install (1 or more) given packages')
     parser.add_argument('-w', '--no-wheel', action='store_true',
                         help='don\'t install wheel in venv')
     parser.add_argument('-v', '--verbose', action='count', default=0,
@@ -99,6 +101,10 @@ def main(args):
 
     if not args.no_wheel:
         run(f'{pip} install -U wheel')
+
+    if args.install:
+        pkgs = ' '.join(args.install)
+        run(f'{pip} install -U {pkgs}')
 
     if not args.no_require:
         reqfile = Path(args.requirements_file) \
