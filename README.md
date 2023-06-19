@@ -158,38 +158,17 @@ Python 3.6 or later is required and the [`sudo`](https://www.sudo.ws/)
 program must be installed.
 
 Note [pinstall is on PyPI](https://pypi.org/project/pinstall/) so just
-ensure that `python3-pip` and `python3-wheel` are installed then type
-the following to install (or upgrade):
+ensure that [`pipx`](https://pypa.github.io/pipx/) is installed then
+type the following:
 
 ```
-$ sudo pip3 install -U --use-pep517 --root-user-action=ignore pinstall
+$ pipx install pinstall
 ```
 
-Note you can not install as user (i.e. `pip3 install --user`) because
-`pyinstall` uses `sudo` to invoke itself to install to system
-directories.
+To upgrade:
 
-Alternately, do the following to install from the source repository
-rather than directly from PiPI:
-
-```sh
-$ git clone http://github.com/bulletmark/pinstall
-$ cd pinstall
-$ sudo pip3 install -U --use-pep517 --root-user-action=ignore .
 ```
-
-## Upgrade
-
-```sh
-$ cd pinstall  # Source dir, as above
-$ git pull
-$ sudo pip3 install -U --use-pep517 --root-user-action=ignore .
-```
-
-## Removal
-
-```sh
-$ sudo pip3 uninstall --root-user-action=ignore pinstall
+$ pipx upgrade pinstall
 ```
 
 ## License
