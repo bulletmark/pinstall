@@ -3,7 +3,8 @@
 import sys
 import subprocess
 
-def run(cmd:str, *, capture:bool=False, ignore_error:bool=False) -> None | str:
+def run(cmd: str, *, capture: bool = False,
+        ignore_error: bool = False) -> None | str:
     'Run given command string'
     if ignore_error:
         cmd += ' 2>/dev/null'

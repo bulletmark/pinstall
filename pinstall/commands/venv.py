@@ -9,12 +9,40 @@ pip + setuptools + wheel; then installs all packages from
 requirements.txt if present.
 '''
 import shutil
+import sys
+import tempfile
 from pathlib import Path
+
 from ..run import run
 
 DEFDIR = 'venv'
 DEFEXE = 'python3'
 DEFREQ = 'requirements.txt'
+PYPROJ = 'pyproject.toml'
+
+def get_pyproj_reqs():
+    'Return a requirements file built from dependencies in PYPROJ if it exists'
+    pyproj = Path(PYPROJ)
+    if not pyproj.exists():
+        return None
+
+    if sys.version_info >= (3, 11):
+        import tomllib
+    else:
+        import tomli as tomllib  # type: ignore
+
+    with pyproj.open('rb') as fp:
+        conf = tomllib.load(fp)
+
+    dependencies = conf.get('project', {}).get('dependencies', [])
+    if not dependencies:
+        return None
+
+    tmpfile = tempfile.NamedTemporaryFile(prefix=f'{pyproj.stem}.',
+                                          suffix='.txt')
+    tmpfile.writelines(line.encode() + b'\n' for line in dependencies)
+    tmpfile.flush()
+    return tmpfile
 
 def init(parser):
     'Called to add arguments to parser at init'
@@ -28,9 +56,11 @@ def init(parser):
                         'i.e. from `pyenv versions`, e.g. "3.9".')
     parser.add_argument('-f', '--requirements-file',
                         help=f'default="{DEFREQ}"')
+    parser.add_argument('-D', '--install-pyproject', action='store_true',
+                        help=f'install dependencies from {PYPROJ} '
+                        f'(only if {DEFREQ} file not present)')
     parser.add_argument('-r', '--no-require', action='store_true',
-                        help='don\'t pip install packages from '
-                        'requirements.txt')
+                        help='don\'t pip install requirements/dependencies')
     parser.add_argument('-u', '--no-upgrade', action='store_true',
                         help='don\'t upgrade pip/setuptools in venv')
     parser.add_argument('-i', '--install', nargs='*', metavar='PACKAGE',
@@ -107,10 +137,18 @@ def main(args):
         run(f'{pip} install -U {pkgs}')
 
     if not args.no_require:
-        reqfile = Path(args.requirements_file) \
-                if args.requirements_file else Path(DEFREQ)
+        if args.requirements_file:
+            reqfile = Path(args.requirements_file)
+            if not reqfile.exists():
+                return f'Error: file "{reqfile}" does not exist.'
+        else:
+            reqfile = Path(DEFREQ)
+            if not reqfile.exists():
+                reqfile = None
+                if args.install_pyproject:
+                    fp = get_pyproj_reqs()
+                    if fp:
+                        reqfile = Path(fp.name)
 
-        if reqfile.exists():
+        if reqfile:
             run(f'{pip} install -U -r "{reqfile}"')
-        elif args.requirements_file:
-            return f'Error: file "{reqfile}" does not exist.'
