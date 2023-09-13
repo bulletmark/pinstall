@@ -6,7 +6,7 @@ Runs `python -m venv` to create a venv (optionally for the specified
 Python name, or path, or pyenv Python version); adds a .gitignore to it
 to be automatically ignored by git; upgrades the venv with the latest
 pip + setuptools + wheel; then installs all packages from
-requirements.txt if present.
+1) requirements.txt if present, or 2) from pyproject.toml if present.
 '''
 import shutil
 import sys
@@ -56,9 +56,6 @@ def init(parser):
                         'i.e. from `pyenv versions`, e.g. "3.9".')
     parser.add_argument('-f', '--requirements-file',
                         help=f'default="{DEFREQ}"')
-    parser.add_argument('-D', '--install-pyproject', action='store_true',
-                        help=f'install dependencies from {PYPROJ} '
-                        f'(only if {DEFREQ} file not present)')
     parser.add_argument('-r', '--no-require', action='store_true',
                         help='don\'t pip install requirements/dependencies')
     parser.add_argument('-u', '--no-upgrade', action='store_true',
@@ -144,11 +141,8 @@ def main(args):
         else:
             reqfile = Path(DEFREQ)
             if not reqfile.exists():
-                reqfile = None
-                if args.install_pyproject:
-                    fp = get_pyproj_reqs()
-                    if fp:
-                        reqfile = Path(fp.name)
+                fp = get_pyproj_reqs()
+                reqfile = fp and Path(fp.name)
 
         if reqfile:
             run(f'{pip} install -U -r "{reqfile}"')

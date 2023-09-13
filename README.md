@@ -36,8 +36,8 @@ individual command:
 
 ```
 usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYENV]
-                        [-f REQUIREMENTS_FILE] [-D] [-r] [-u]
-                        [-i [PACKAGE ...]] [-w] [-v]
+                        [-f REQUIREMENTS_FILE] [-r] [-u] [-i [PACKAGE ...]]
+                        [-w] [-v]
                         [args ...]
 
 Creates a Python virtual environment.
@@ -46,7 +46,7 @@ Runs `python -m venv` to create a venv (optionally for the specified
 Python name, or path, or pyenv Python version); adds a .gitignore to it
 to be automatically ignored by git; upgrades the venv with the latest
 pip + setuptools + wheel; then installs all packages from
-requirements.txt if present.
+1) requirements.txt if present, or 2) from pyproject.toml if present.
 
 positional arguments:
   args                  optional arguments to python -m venv (add by starting
@@ -62,9 +62,6 @@ options:
                         versions`, e.g. "3.9".
   -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"
-  -D, --install-pyproject
-                        install dependencies from pyproject.toml (only if
-                        requirements.txt file not present)
   -r, --no-require      don't pip install requirements/dependencies
   -u, --no-upgrade      don't upgrade pip/setuptools in venv
   -i [PACKAGE ...], --install [PACKAGE ...]
