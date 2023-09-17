@@ -25,15 +25,16 @@ them in hash symbols. Installed copies of these source files have all
 instances of template strings replaced by their value. E.g. #HOME#
 gets replaced by the user's home directory path.
 '''
+import getpass
 import os
 import sys
-import getpass
-from pwd import getpwnam
 from pathlib import Path
+from pwd import getpwnam
+
 from ..run import run
 
 def init(parser):
-    'Called to add arguments to parser at init'
+    "Called to add this command's arguments to parser at init"
     parser.add_argument('-u', '--user', action='store_true',
                         help='install as user service')
     parser.add_argument('-s', '--no-start', action='store_true',

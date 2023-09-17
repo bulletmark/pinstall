@@ -5,7 +5,7 @@ Creates a Python virtual environment.
 Runs `python -m venv` to create a venv (optionally for the specified
 Python name, or path, or pyenv Python version); adds a .gitignore to it
 to be automatically ignored by git; upgrades the venv with the latest
-pip + setuptools + wheel; then installs all packages from
+pip + setuptools + wheel; then installs all package dependencies from
 1) requirements.txt if present, or 2) from pyproject.toml if present.
 '''
 import shutil
@@ -45,7 +45,7 @@ def get_pyproj_reqs():
     return tmpfile
 
 def init(parser):
-    'Called to add arguments to parser at init'
+    "Called to add this command's arguments to parser at init"
     parser.add_argument('-d', '--dir', default=DEFDIR,
                         help='directory name to create, default="%(default)s"')
     xgroup = parser.add_mutually_exclusive_group()

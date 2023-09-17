@@ -2,9 +2,9 @@
 [![PyPi](https://img.shields.io/pypi/v/pinstall)](https://pypi.org/project/pinstall/)
 [![AUR](https://img.shields.io/aur/version/pinstall)](https://aur.archlinux.org/packages/pinstall/)
 
-This is a simple tool to facilitate installing Python programs on Linux
-systems. The following commands are presently implemented, each as an
-independent [plugin](pinstall/commands).
+This is a simple "swiss-army" tool to facilitate installing Python
+programs on Linux systems. The following commands are presently
+implemented, each as an independent [plugin](pinstall/commands).
 
 The latest documentation and code is available at
 https://github.com/bulletmark/pinstall.
@@ -14,7 +14,7 @@ https://github.com/bulletmark/pinstall.
 Type `pinstall` or `pinstall -h` to view the usage summary:
 
 ```
-usage: pinstall [-h] {venv,status,service} ...
+usage: pinstall [-h] {project,service,status,venv} ...
 
 Installer tool for Python programs.
 
@@ -22,69 +22,45 @@ options:
   -h, --help            show this help message and exit
 
 Commands:
-  {venv,status,service}
-    venv                Creates a Python virtual environment.
+  {project,service,status,venv}
+    project             Creates a bare-bones Python pyproject.toml file to
+                        facilitate installation by pipx or pip.
+    service             Installs systemd services and corresponding timers.
     status              Reports systemctl status of services and timers
                         installed from the current directory.
-    service             Installs systemd services and corresponding timers.
+    venv                Creates a Python virtual environment.
 ```
 
 Type `pinstall <command> -h` to see specific help/usage for any
 individual command:
 
-### Command `venv`
+### Command `project`
 
 ```
-usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYENV]
-                        [-f REQUIREMENTS_FILE] [-r] [-u] [-i [PACKAGE ...]]
-                        [-w] [-v]
-                        [args ...]
+usage: pinstall project [-h] [-f REQUIREMENTS_FILE] [app]
 
-Creates a Python virtual environment.
+Creates a bare-bones Python pyproject.toml file to facilitate
+installation by pipx or pip.
 
-Runs `python -m venv` to create a venv (optionally for the specified
-Python name, or path, or pyenv Python version); adds a .gitignore to it
-to be automatically ignored by git; upgrades the venv with the latest
-pip + setuptools + wheel; then installs all packages from
-1) requirements.txt if present, or 2) from pyproject.toml if present.
+Useful when you have an app.py and it's special package dependencies
+specified in requirements.txt and want to install that app.py (as
+command "app") using pipx or pip but don't have a pyproject.toml (or old
+style setup.py). Run this command in the same directory as the files and
+it will create a bare-bones ./pyproject.toml file. This will allow you
+to install the app using `pipx install .`, or `pip install .` commands.
+
+Your app.py must have a main() function to be called when the app is
+run.
 
 positional arguments:
-  args                  optional arguments to python -m venv (add by starting
-                        with "--"). See options in `python -m venv -h`
+  app                   app[.py] or app/ package to create pyproject.toml for.
+                        If not specified then looks for a single .py file in
+                        current directory.
 
 options:
   -h, --help            show this help message and exit
-  -d DIR, --dir DIR     directory name to create, default="venv"
-  -p PYTHON, --python PYTHON
-                        python executable, default="python3"
-  -P PYENV, --pyenv PYENV
-                        pyenv python version to use, i.e. from `pyenv
-                        versions`, e.g. "3.9".
   -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"
-  -r, --no-require      don't pip install requirements/dependencies
-  -u, --no-upgrade      don't upgrade pip/setuptools in venv
-  -i [PACKAGE ...], --install [PACKAGE ...]
-                        also install (1 or more) given packages
-  -w, --no-wheel        don't install wheel in venv
-  -v, --verbose         verbose pip install (can add multiple times to
-                        increase verbosity)
-```
-
-### Command `status`
-
-```
-usage: pinstall status [-h] [-u] [units ...]
-
-Reports systemctl status of services and timers installed from the
-current directory.
-
-positional arguments:
-  units       systemd service file[s]
-
-options:
-  -h, --help  show this help message and exit
-  -u, --user  report for user service
 ```
 
 ### Command `service`
@@ -128,6 +104,61 @@ options:
   -r, --remove     just uninstall and remove service[s]
 ```
 
+### Command `status`
+
+```
+usage: pinstall status [-h] [-u] [units ...]
+
+Reports systemctl status of services and timers installed from the
+current directory.
+
+positional arguments:
+  units       systemd service file[s]
+
+options:
+  -h, --help  show this help message and exit
+  -u, --user  report for user service
+```
+
+### Command `venv`
+
+```
+usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYENV]
+                        [-f REQUIREMENTS_FILE] [-r] [-u] [-i [PACKAGE ...]]
+                        [-w] [-v]
+                        [args ...]
+
+Creates a Python virtual environment.
+
+Runs `python -m venv` to create a venv (optionally for the specified
+Python name, or path, or pyenv Python version); adds a .gitignore to it
+to be automatically ignored by git; upgrades the venv with the latest
+pip + setuptools + wheel; then installs all package dependencies from
+1) requirements.txt if present, or 2) from pyproject.toml if present.
+
+positional arguments:
+  args                  optional arguments to python -m venv (add by starting
+                        with "--"). See options in `python -m venv -h`
+
+options:
+  -h, --help            show this help message and exit
+  -d DIR, --dir DIR     directory name to create, default="venv"
+  -p PYTHON, --python PYTHON
+                        python executable, default="python3"
+  -P PYENV, --pyenv PYENV
+                        pyenv python version to use, i.e. from `pyenv
+                        versions`, e.g. "3.9".
+  -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
+                        default="requirements.txt"
+  -r, --no-require      don't pip install requirements/dependencies
+  -u, --no-upgrade      don't upgrade pip/setuptools in venv
+  -i [PACKAGE ...], --install [PACKAGE ...]
+                        also install (1 or more) given packages
+  -w, --no-wheel        don't install wheel in venv
+  -v, --verbose         verbose pip install (can add multiple times to
+                        increase verbosity)
+```
+
 ## Command `venv` usage with Pyenv
 
 [Pyenv](https://github.com/pyenv/pyenv) is a popular tool to easily
@@ -142,11 +173,11 @@ current directory) using it:
 $ pyenv install 3.7
 $ pinstall venv -P 3.7
 $ venv/bin/python --version
-Python 3.7.16
+Python 3.7.17
 ```
 
 Note in this example that [pyenv](https://github.com/pyenv/pyenv)
-installed Python 3.7.16 because that was the latest 3.7 version
+installed Python 3.7.17 because that was the latest 3.7 version
 available (at the time of writing).
 
 ## Installation
@@ -155,7 +186,7 @@ Arch Linux users can install [pinstall from the
 AUR](https://aur.archlinux.org/packages/pinstall).
 
 Python 3.6 or later is required and the [`sudo`](https://www.sudo.ws/)
-program must be installed.
+program must be installed (to use the `service` command).
 
 Note [pinstall is on PyPI](https://pypi.org/project/pinstall/) so just
 ensure that [`pipx`](https://pypa.github.io/pipx/) is installed then

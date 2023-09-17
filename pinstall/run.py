@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 'Common module to run given command'
-import sys
 import subprocess
+import sys
 
 def run(cmd: str, *, capture: bool = False,
         ignore_error: bool = False) -> None | str:

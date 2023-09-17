@@ -2,9 +2,9 @@
 'Installer tool for Python programs.'
 # Author: Mark Blakeney, Apr 2023.
 
-import sys
 import argparse
 import importlib
+import sys
 from pathlib import Path
 
 def main():
@@ -16,7 +16,7 @@ def main():
     # Iterate over the commands to set up their parsers
     progs = {}
     prog = Path(__file__)
-    for modfile in (prog.parent / 'commands').glob('[!_]*.py'):
+    for modfile in sorted((prog.parent / 'commands').glob('[!_]*.py')):
         name = modfile.stem
         mod = importlib.import_module(f'{prog.stem}.commands.{name}')
         docstr = mod.__doc__.strip().split('\n\n')[0] if mod.__doc__ else None

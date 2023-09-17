@@ -5,10 +5,11 @@ current directory.
 '''
 import sys
 from pathlib import Path
+
 from ..run import run
 
 def init(parser):
-    'Called to add arguments to parser at init'
+    "Called to add this command's arguments to parser at init"
     parser.add_argument('-u', '--user', action='store_true',
                         help='report for user service')
     parser.add_argument('units', nargs='*',
