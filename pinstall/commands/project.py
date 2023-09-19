@@ -65,8 +65,12 @@ def main(args):
     global template
 
     pytoml = Path(PYTOML)
-    if not args.overwrite and pytoml.exists():
-        return f'Error: "{pytoml}" already exists.'
+    if pytoml.exists():
+        if not args.overwrite:
+            return f'Error: "{pytoml}" already exists.'
+        action = 'overwritten'
+    else:
+        action = 'created'
 
     # Use user supplied or default requirements file
     if args.requirements_file:
@@ -130,4 +134,4 @@ def main(args):
     }
 
     pytoml.write_text(Template(template).substitute(template_values))
-    print(f'{pytoml} created.')
+    print(f'{pytoml} {action}.')
