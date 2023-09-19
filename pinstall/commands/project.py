@@ -53,6 +53,8 @@ def init(parser):
     "Called to add this command's arguments to parser at init"
     parser.add_argument('-f', '--requirements-file',
                         help=f'default="{DEFREQ}"')
+    parser.add_argument('-o', '--overwrite', action='store_true',
+                        help=f'overwrite existing {PYTOML} file')
     parser.add_argument('app', nargs='?',
                         help='app[.py] or app/ package to '
                         f'create {PYTOML} for. If not specified then '
@@ -63,7 +65,7 @@ def main(args):
     global template
 
     pytoml = Path(PYTOML)
-    if pytoml.exists():
+    if not args.overwrite and pytoml.exists():
         return f'Error: "{pytoml}" already exists.'
 
     # Use user supplied or default requirements file

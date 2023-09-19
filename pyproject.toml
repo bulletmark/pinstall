@@ -7,7 +7,8 @@ name = "pinstall"
 description = "Installer Tool for Python Programs"
 readme = "README.md"
 requires-python = ">=3.6"
-keywords = ["venv", "virtualenv", "systemd", "service"]
+keywords = ["venv", "virtualenv", "systemd", "service", "pip", "pipx",
+	 "pyproject.toml"]
 classifiers = [
   "Programming Language :: Python :: 3",
 ]

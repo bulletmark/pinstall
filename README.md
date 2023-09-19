@@ -37,7 +37,7 @@ individual command:
 ### Command `project`
 
 ```
-usage: pinstall project [-h] [-f REQUIREMENTS_FILE] [app]
+usage: pinstall project [-h] [-f REQUIREMENTS_FILE] [-o] [app]
 
 Creates a bare-bones Python pyproject.toml file to facilitate
 installation by pipx or pip.
@@ -61,6 +61,7 @@ options:
   -h, --help            show this help message and exit
   -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"
+  -o, --overwrite       overwrite existing pyproject.toml file
 ```
 
 ### Command `service`
