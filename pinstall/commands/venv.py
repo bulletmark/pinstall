@@ -79,24 +79,14 @@ def main(args):
         if not pyenv_root:
             return 'Error: Can not find pyenv. Is it installed?'
 
-        basedir = Path(pyenv_root, 'versions')
-        pydir = basedir / args.pyenv
+        pyenv_version = run(f'pyenv latest {args.pyenv}', capture=True,
+                            ignore_error=True)
+        if not pyenv_version:
+            return f'Error: no pyenv version {args.pyenv} installed.'
 
-        if not pydir.exists():
-            # Given specific version does not exist, get latest version
-            from looseversion import LooseVersion as Version
-            try:
-                versions = sorted(basedir.glob(f'{args.pyenv}[-.]*'),
-                                key=lambda x: Version(x.name))
-            except Exception:
-                return f'Can not determine pyenv version for {args.pyenv}'
-
-            if not versions:
-                return f'Error: no pyenv version {args.pyenv} installed.'
-
-            pydir = versions[-1]
-
-        pyexe = str(pydir / 'bin/python')
+        pyexe = Path(pyenv_root, 'versions', pyenv_version, 'bin', 'python')
+        if not pyexe.exists():
+            return f'Can not determine pyenv version for {args.pyenv}'
     else:
         pyexe = args.python
 
