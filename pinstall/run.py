@@ -25,7 +25,7 @@ def run(cmd: str, *, capture: bool = False,
 
     if res.returncode != 0:
         if not capture and not ignore_error:
-            sys.exit()
+            sys.exit(res.returncode)
         return None
 
     return res.stdout and res.stdout.strip()
