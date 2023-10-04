@@ -126,7 +126,7 @@ options:
 ```
 usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYENV]
                         [-f REQUIREMENTS_FILE] [-r] [-u] [-i [PACKAGE ...]]
-                        [-w] [-v]
+                        [-w] [-W] [-v]
                         [args ...]
 
 Creates a Python virtual environment.
@@ -155,7 +155,9 @@ options:
   -u, --no-upgrade      don't upgrade pip/setuptools in venv
   -i [PACKAGE ...], --install [PACKAGE ...]
                         also install (1 or more) given packages
-  -w, --no-wheel        don't install wheel in venv
+  -w, --without-pip     don't install pip or requirements in venv (i.e. pass
+                        --without-pip to python -m venv)
+  -W, --no-wheel        don't install wheel in venv
   -v, --verbose         verbose pip install (can add multiple times to
                         increase verbosity)
 ```

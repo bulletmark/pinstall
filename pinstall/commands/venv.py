@@ -62,7 +62,10 @@ def init(parser):
                         help='don\'t upgrade pip/setuptools in venv')
     parser.add_argument('-i', '--install', nargs='*', metavar='PACKAGE',
                         help='also install (1 or more) given packages')
-    parser.add_argument('-w', '--no-wheel', action='store_true',
+    parser.add_argument('-w', '--without-pip', action='store_true',
+                        help='don\'t install pip or requirements in venv '
+                        '(i.e. pass --without-pip to python -m venv)')
+    parser.add_argument('-W', '--no-wheel', action='store_true',
                         help='don\'t install wheel in venv')
     parser.add_argument('-v', '--verbose', action='count', default=0,
                         help='verbose pip install (can add multiple times to '
@@ -84,9 +87,12 @@ def main(args):
         if not pyenv_version:
             return f'Error: no pyenv version {args.pyenv} installed.'
 
-        pyexe = Path(pyenv_root, 'versions', pyenv_version, 'bin', 'python')
-        if not pyexe.exists():
+        pyexe_path = Path(pyenv_root, 'versions', pyenv_version,
+                          'bin', 'python')
+        if not pyexe_path.exists():
             return f'Can not determine pyenv version for {args.pyenv}'
+
+        pyexe = str(pyexe_path)
     else:
         pyexe = args.python
 
@@ -94,6 +100,9 @@ def main(args):
     if '--upgrade' not in args.args and vdir.exists():
         print(f'### Removing existing {vdir}/ ..')
         shutil.rmtree(vdir)
+
+    if args.without_pip and '--without-pip' not in args.args:
+        args.args.append('--without-pip')
 
     # Create the venv ..
     opts = ' ' + ' '.join(args.args)

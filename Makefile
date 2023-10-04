@@ -6,7 +6,8 @@ check:
 	flake8 .
 	mypy .
 	pyright .
-	vermin -v --exclude tomllib --no-tips -i */*.py */*/*.py
+	vermin -vv --exclude importlib.metadata --exclude tomllib \
+		--eval-annotations --no-tips -i */*.py */*/*.py
 
 upload: build
 	twine3 upload dist/*
