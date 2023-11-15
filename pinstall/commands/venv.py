@@ -110,8 +110,10 @@ def main(args):
     if not vdir.exists():
         return
 
-    text = f'# Automatically created by {args._prog}\n*'
-    (Path(vdir) / '.gitignore').write_text(text)
+    # Python 3.13+ may create a .gitignore for us, but if not, create one ..
+    gitignore = vdir / '.gitignore'
+    if not gitignore.exists():
+        gitignore.write_text(f'# Automatically created by {args._prog}\n*\n')
 
     # Next do all pip installs ..
     if '--without-pip' in args.args:
