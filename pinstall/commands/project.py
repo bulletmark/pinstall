@@ -99,18 +99,19 @@ def main(args):
     if '-' in file.name:
         return f'Error: "{file}" contains a hyphen which is not allowed.'
 
-    name = file.stem
+    filestem = file.stem
+    name = filestem.replace('_', '-')
 
     if file.is_dir():
         if file.suffix == '.py':
             return f'Error: "{file}" is a directory so can '\
                     'not have a .py extension.'
 
-        file = (file / name).with_suffix('.py')
-        pyname = f'{name}.{name}'
+        file = (file / filestem).with_suffix('.py')
+        pyname = f'{filestem}.{filestem}'
     else:
         file = file.with_suffix('.py')
-        pyname = name
+        pyname = filestem
 
     if not file.exists():
         return f'Error: "{file}" does not exist.'
