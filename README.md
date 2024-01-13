@@ -204,14 +204,14 @@ available (at the time of writing).
 ## Management of pyenv versions
 
 [Pyenv](https://github.com/pyenv/pyenv) gives you the handy ability to
-install multiple versions of Python. There is no easy/quick way to
-update all those versions unless you update each manually. So pinstall
-offers a `pyenv` command to update your installed pyenv versions.
-Just run `pinstall pyenv` to check your versions and update any
-which have a newer minor version. E.g. if you have 3.7.3 installed and
-3.7.4 is available then `pinstall pyenv` will invoke `pyenv` to install
-3.7.4. You can also run `pinstall pyenv -p` to purge any
-older/superceded versions, i.e. to remove 3.7.3 in this example.
+install multiple versions of Python. However, there is no easy/quick way
+to update all those versions unless you update each manually. So
+pinstall offers a `pyenv` command to do this. Just run `pinstall pyenv`
+which will check your versions and update any which have a newer minor
+version. E.g. if you have 3.7.3 installed and 3.7.4 is available then
+`pinstall pyenv` will invoke `pyenv` to install 3.7.4. You can also run
+`pinstall pyenv -p` to automatically purge any older/superceded
+versions, i.e. to remove 3.7.3 in this example.
 
 `pinstall pyenv` also does something else each time you run it. It
 creates or updates major version links. E.g. after installing 3.7.4 as
@@ -219,10 +219,10 @@ in the above example, `pinstall pyenv` will also create a link in your
 `pyenv` versions directory `3.7 -> 3.7.4`. This allows you to create a
 virtual environment in two ways:
 
-1. `pinstall venv -P 3.7.4` will created a virtual environment using
-   3.7.4 permanently.
+1. `pinstall venv -P 3.7.4` will create a virtual environment using
+   3.7.4 permanently, or:
 
-2. `pinstall venv -P 3.7` will created a virtual environment using the
+2. `pinstall venv -P 3.7` will create a virtual environment using the
    link 3.7 which initially points to 3.7.4 but will automatically use
    3.7.5 when/if the minor version gets updated (i.e. after you have
    done a later `pinstall pyenv` to find and install a new 3.7.5).
