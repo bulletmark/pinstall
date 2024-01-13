@@ -20,6 +20,8 @@ def update_symlinks(args: Namespace) -> None:
         return None
 
     base = Path(basestr.strip()) / 'versions'
+    if not base.exists():
+        return None
 
     # Get a record of all the symlinks and versions
     linkmap = {}
