@@ -191,7 +191,6 @@ current directory) using it:
 
 ```sh
 $ pyenv install 3.7
-$ pinstall pyenv
 $ pinstall venv -P 3.7
 $ venv/bin/python --version
 Python 3.7.17
@@ -217,7 +216,7 @@ versions, i.e. to remove 3.7.3 in this example.
 creates or updates major version links. E.g. after installing 3.7.4 as
 in the above example, `pinstall pyenv` will also create a link in your
 `pyenv` versions directory `3.7 -> 3.7.4`. This allows you to create a
-virtual environment in two ways:
+virtual environment in either of two ways:
 
 1. `pinstall venv -P 3.7.4` will create a virtual environment using
    3.7.4 permanently, or:
@@ -225,13 +224,13 @@ virtual environment in two ways:
 2. `pinstall venv -P 3.7` will create a virtual environment using the
    link 3.7 which initially points to 3.7.4 but will automatically use
    3.7.5 when/if the minor version gets updated (i.e. after you have
-   done a later `pinstall pyenv` to find and install a new 3.7.5).
+   done a later `pinstall pyenv` to find and install a new 3.7.5). Note
+   that python minor version updates are always backwards compatible.
 
-Note if you don't use `pinstall pyenv` to update your `pyenv` versions
-and always only manage them via `pyenv` directly then `pinstall venv -P
-3.7` will still work but in this case `pyenv` simply dereferences 3.7 to
-3.7.4 immediately to create the virtual enviroment, i.e. the same as if
-you typed `pinstall venv -P 3.7.4` explicitly.
+Note that whenever you run `pinstall venv` and specify a `-P/--pyenv`
+version then pinstall will always first silently update the pyenv links
+implicitly to ensure the latest major version links are correct before
+creating your new virtual environment.
 
 ## Installation
 

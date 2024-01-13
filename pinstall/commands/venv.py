@@ -14,6 +14,7 @@ import tempfile
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from typing import Any, Optional
+from . import pyenv
 
 from ..run import run
 
@@ -83,6 +84,10 @@ def main(args: Namespace) -> Optional[str]:
         pyenv_root = run('pyenv root', capture=True)
         if not pyenv_root:
             return 'Error: Can not find pyenv. Is it installed?'
+
+        # Since we are about to use pyenv, make sure the links are up to
+        # date
+        pyenv.update_symlinks()
 
         pyenv_version = run(f'pyenv latest {args.pyenv}', capture=True,
                             ignore_error=True)

@@ -13,7 +13,7 @@ from ..run import run
 
 valids = set(string.digits + '.')
 
-def update_symlinks(args: Namespace) -> None:
+def update_symlinks(remove_symlinks: bool = False) -> None:
     'Update all symlinks in pyenv versions dir'
     basestr = run('pyenv root', capture=True)
     if not basestr:
@@ -29,14 +29,14 @@ def update_symlinks(args: Namespace) -> None:
     for path in base.iterdir():
         if all(c in valids for c in path.name):
             if path.is_symlink():
-                if args.remove_major_symlinks:
+                if remove_symlinks:
                     path.unlink()
                 else:
                     oldlinks[path.name] = os.readlink(str(path))
             else:
                 vers.append(path)
 
-    if args.remove_major_symlinks:
+    if remove_symlinks:
         return None
 
     # Create a map of all the new major version links
@@ -112,5 +112,5 @@ def main(args: Namespace) -> Optional[str]:
                 run(f'pyenv install -s {latest}')
 
     # Ensure we always update all the major version symlinks
-    update_symlinks(args)
+    update_symlinks(args.remove_major_symlinks)
     return None
