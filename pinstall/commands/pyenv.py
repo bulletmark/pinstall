@@ -23,8 +23,8 @@ def update_symlinks(args: Namespace) -> None:
     if not base.exists():
         return None
 
-    # Get a record of all the symlinks and versions
-    linkmap = {}
+    # Record of all the existing symlinks and version dirs
+    oldlinks = {}
     vers = []
     for path in base.iterdir():
         if all(c in valids for c in path.name):
@@ -32,37 +32,36 @@ def update_symlinks(args: Namespace) -> None:
                 if args.remove_major_symlinks:
                     path.unlink()
                 else:
-                    linkmap[path.name] = os.readlink(str(path))
+                    oldlinks[path.name] = os.readlink(str(path))
             else:
                 vers.append(path)
 
     if args.remove_major_symlinks:
         return None
 
-    # Create a map of all the major version symlinks
-    nlinkmap = defaultdict(list)
+    # Create a map of all the new major version links
+    newlinks_all = defaultdict(list)
     for path in vers:
         namevers = path.name
         while '.' in namevers[:-1]:
             namevers_major = namevers.rsplit('.', maxsplit=1)[0]
-            nlinkmap[namevers_major].append(namevers)
+            newlinks_all[namevers_major].append(namevers)
             namevers = namevers_major
 
-    # Ensure all major links point to the latest version
-    for name, nlinks in nlinkmap.items():
-        path = base / name
-        nlink = sorted(nlinks, key=version.parse)[-1]
-        olink = linkmap.get(name)
-        if olink != nlink:
-            path.unlink(missing_ok=True)
-            path.symlink_to(nlink, target_is_directory=True)
+    newlinks = {k: sorted(v, key=version.parse)[-1] for k, v in
+                newlinks_all.items()}
 
-        if olink and Path(base / olink).exists():
-            del linkmap[name]
+    # Remove all old or invalid existing links
+    for name, tgt in oldlinks.items():
+        new_tgt = newlinks.get(name)
+        if not new_tgt or new_tgt != tgt:
+            Path(base / name).unlink()
 
-    # Delete any old/dead symlinks
-    for name in linkmap:
-        (base / name).unlink(missing_ok=True)
+    # Create all needed new links
+    for name, tgt in newlinks.items():
+        old_tgt = oldlinks.get(name)
+        if not old_tgt or old_tgt != tgt:
+            Path(base / name).symlink_to(tgt, target_is_directory=True)
 
 def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
