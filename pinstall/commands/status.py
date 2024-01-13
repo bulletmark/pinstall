@@ -4,18 +4,20 @@ Reports systemctl status of services and timers installed from the
 current directory.
 '''
 import sys
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
+from typing import Optional
 
 from ..run import run
 
-def init(parser):
+def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
     parser.add_argument('-u', '--user', action='store_true',
                         help='report for user service')
     parser.add_argument('units', nargs='*',
                         help='systemd service file[s]')
 
-def main(args):
+def main(args: Namespace) -> Optional[str]:
     'Called to action this command'
     units = [Path(p) for p in args.units] \
             if args.units else list(Path.cwd().glob('*.service'))
@@ -40,3 +42,5 @@ def main(args):
                 run(f'{cmd} {other.name}')
 
         run(f'{cmd} {unit.name}')
+
+    return None

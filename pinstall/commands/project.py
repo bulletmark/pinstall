@@ -15,8 +15,10 @@ run.
 '''
 import datetime
 import getpass
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from string import Template
+from typing import Optional
 
 DEFREQ = 'requirements.txt'
 PYTOML = 'pyproject.toml'
@@ -49,7 +51,7 @@ addendum = '''
 dependencies = {file = ["$reqfile"]}
 '''
 
-def init(parser):
+def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
     parser.add_argument('-f', '--requirements-file',
                         help=f'default="{DEFREQ}"')
@@ -60,7 +62,7 @@ def init(parser):
                         f'create {PYTOML} for. If not specified then '
                         'looks for a single .py file in current directory.')
 
-def main(args):
+def main(args: Namespace) -> Optional[str]:
     'Called to action this command'
     global template
 
@@ -136,3 +138,4 @@ def main(args):
 
     pytoml.write_text(Template(template).substitute(template_values))
     print(f'{pytoml} {action}.')
+    return None

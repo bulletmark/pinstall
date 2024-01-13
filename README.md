@@ -1,4 +1,4 @@
-## PINSTALL - Installer Tool for Python Programs
+## PINSTALL - Installer/Utility Tool for Python Programs
 [![PyPi](https://img.shields.io/pypi/v/pinstall)](https://pypi.org/project/pinstall/)
 [![AUR](https://img.shields.io/aur/version/pinstall)](https://aur.archlinux.org/packages/pinstall/)
 
@@ -14,17 +14,19 @@ https://github.com/bulletmark/pinstall.
 Type `pinstall` or `pinstall -h` to view the usage summary:
 
 ```
-usage: pinstall [-h] {project,service,status,venv} ...
+usage: pinstall [-h] {project,pyenv,service,status,venv} ...
 
-Installer tool for Python programs.
+Installer/utility tool for Python programs.
 
 options:
   -h, --help            show this help message and exit
 
 Commands:
-  {project,service,status,venv}
+  {project,pyenv,service,status,venv}
     project             Creates a bare-bones Python pyproject.toml file to
                         facilitate installation by pipx or pip.
+    pyenv               Updates all pyenv python versions and creates links to
+                        current major versions.
     service             Installs systemd services and corresponding timers.
     status              Reports systemctl status of services and timers
                         installed from the current directory.
@@ -62,6 +64,21 @@ options:
   -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"
   -o, --overwrite       overwrite existing pyproject.toml file
+```
+
+### Command `pyenv`
+
+```
+usage: pinstall pyenv [-h] [-l] [-p] [-m]
+
+Updates all pyenv python versions and creates links to current major versions.
+
+options:
+  -h, --help            show this help message and exit
+  -l, --list            just list latest versions, do not update or purge
+  -p, --purge           just purge old versions if later is installed
+  -m, --remove-major-symlinks
+                        remove all symlinks to major versions
 ```
 
 ### Command `service`
@@ -162,7 +179,7 @@ options:
                         increase verbosity)
 ```
 
-## Command `venv` usage with Pyenv
+## Command `venv` usage with pyenv
 
 [Pyenv](https://github.com/pyenv/pyenv) is a popular tool to easily
 install and switch between multiple versions of Python. So for example,
@@ -174,6 +191,7 @@ current directory) using it:
 
 ```sh
 $ pyenv install 3.7
+$ pinstall pyenv
 $ pinstall venv -P 3.7
 $ venv/bin/python --version
 Python 3.7.17
@@ -182,6 +200,38 @@ Python 3.7.17
 Note in this example that [pyenv](https://github.com/pyenv/pyenv)
 installed Python 3.7.17 because that was the latest 3.7 version
 available (at the time of writing).
+
+## Management of pyenv versions
+
+[Pyenv](https://github.com/pyenv/pyenv) gives you the handy ability to
+install multiple versions of Python. There is no easy/quick way to
+update all those versions unless you update each manually. So pinstall
+offers a `pyenv` command to update your installed pyenv versions.
+Just run `pinstall pyenv` to check your versions and update any
+which have a newer minor version. E.g. if you have 3.7.3 installed and
+3.7.4 is available then `pinstall pyenv` will invoke `pyenv` to install
+3.7.4. You can also run `pinstall pyenv -p` to purge any
+older/superceded versions, i.e. to remove 3.7.3 in this example.
+
+`pinstall pyenv` also does something else each time you run it. It
+creates or updates major version links. E.g. after installing 3.7.4 as
+in the above example, `pinstall pyenv` will also create a link in your
+`pyenv` versions directory `3.7 -> 3.7.4`. This allows you to create a
+virtual environment in two ways:
+
+1. `pinstall venv -P 3.7.4` will created a virtual environment using
+   3.7.4 permanently.
+
+2. `pinstall venv -P 3.7` will created a virtual environment using the
+   link 3.7 which initially points to 3.7.4 but will automatically use
+   3.7.5 when/if the minor version gets updated (i.e. after you have
+   done a later `pinstall pyenv` to find and install a new 3.7.5).
+
+Note if you don't use `pinstall pyenv` to update your `pyenv` versions
+and always only manage them via `pyenv` directly then `pinstall venv -P
+3.7` will still work but in this case `pyenv` simply dereferences 3.7 to
+3.7.4 immediately to create the virtual enviroment, i.e. the same as if
+you typed `pinstall venv -P 3.7.4` explicitly.
 
 ## Installation
 

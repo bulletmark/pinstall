@@ -11,7 +11,9 @@ pip + setuptools + wheel; then installs all package dependencies from
 import shutil
 import sys
 import tempfile
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
+from typing import Any, Optional
 
 from ..run import run
 
@@ -20,7 +22,7 @@ DEFEXE = 'python3'
 DEFREQ = 'requirements.txt'
 PYPROJ = 'pyproject.toml'
 
-def get_pyproj_reqs():
+def get_pyproj_reqs() -> Any:
     'Return a requirements file built from dependencies in PYPROJ if it exists'
     pyproj = Path(PYPROJ)
     if not pyproj.exists():
@@ -44,7 +46,7 @@ def get_pyproj_reqs():
     tmpfile.flush()
     return tmpfile
 
-def init(parser):
+def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
     parser.add_argument('-d', '--dir', default=DEFDIR,
                         help='directory name to create, default="%(default)s"')
@@ -75,7 +77,7 @@ def init(parser):
                         '(add by starting with "--"). See options in '
                         '`python -m venv -h`')
 
-def main(args):
+def main(args: Namespace) -> Optional[str]:
     'Called to action this command'
     if args.pyenv:
         pyenv_root = run('pyenv root', capture=True)
@@ -108,7 +110,7 @@ def main(args):
     opts = ' ' + ' '.join(args.args)
     run(f'{pyexe} -m venv{opts.rstrip()} {vdir}')
     if not vdir.exists():
-        return
+        return None
 
     # Python 3.13+ may create a .gitignore for us, but if not, create one ..
     gitignore = vdir / '.gitignore'
@@ -117,7 +119,7 @@ def main(args):
 
     # Next do all pip installs ..
     if '--without-pip' in args.args:
-        return
+        return None
 
     pip = str(vdir / 'bin/pip')
     if args.verbose > 0:
@@ -147,3 +149,5 @@ def main(args):
 
         if reqfile:
             run(f'{pip} install -U -r "{reqfile}"')
+
+    return None

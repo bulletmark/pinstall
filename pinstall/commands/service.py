@@ -28,12 +28,14 @@ gets replaced by the user's home directory path.
 import getpass
 import os
 import sys
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from pwd import getpwnam
+from typing import Dict, Optional
 
 from ..run import run
 
-def init(parser):
+def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
     parser.add_argument('-u', '--user', action='store_true',
                         help='install as user service')
@@ -46,7 +48,7 @@ def init(parser):
     parser.add_argument('units', nargs='*',
                         help='systemd service file[s]')
 
-def remove_unit(args, unit):
+def remove_unit(args: Namespace, unit: Path) -> bool:
     'Remove given unit file'
     if not unit.exists():
         return False
@@ -70,7 +72,8 @@ def remove_unit(args, unit):
 
     return True
 
-def create_unit(args, templdata, sysdpath, unit):
+def create_unit(args: Namespace, templdata: Dict[str, str], sysdpath: Path,
+                unit: Path) -> bool:
     'Create given unit file'
     target = sysdpath / unit.name
     print(f'### Creating unit file {target}')
@@ -100,7 +103,7 @@ def create_unit(args, templdata, sysdpath, unit):
 
     return True
 
-def main(args):
+def main(args: Namespace) -> Optional[str]:
     'Called to action this command'
     userid = os.getuid()
     if not args.user:
@@ -180,3 +183,5 @@ def main(args):
 
     if change:
         run(f'{sysctl} daemon-reload')
+
+    return None

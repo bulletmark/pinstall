@@ -1,13 +1,14 @@
 #!/usr/bin/python3
-'Installer tool for Python programs.'
+'Installer/utility tool for Python programs.'
 # Author: Mark Blakeney, Apr 2023.
 
 import argparse
 import importlib
 import sys
 from pathlib import Path
+from typing import Optional
 
-def main():
+def main() -> Optional[str]:
     'Main code'
     mainparser = argparse.ArgumentParser(description=__doc__)
     subparser = mainparser.add_subparsers(title='Commands',
@@ -28,6 +29,7 @@ def main():
 
         if hasattr(mod, 'init'):
             mod.init(parser)
+
         if not hasattr(mod, 'main'):
             mainparser.error(f'"{name}" command must define a main()')
 
@@ -37,7 +39,7 @@ def main():
 
     if not args.func:
         mainparser.print_help()
-        return
+        return None
 
     args._prog = progs[args.name]
 
