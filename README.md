@@ -14,7 +14,7 @@ https://github.com/bulletmark/pinstall.
 Type `pinstall` or `pinstall -h` to view the usage summary:
 
 ```
-usage: pinstall [-h] {project,pyenv,service,status,venv} ...
+usage: pinstall [-h] {project,pyenv,service,status,venv,version} ...
 
 Installer/utility tool for Python programs.
 
@@ -22,7 +22,7 @@ options:
   -h, --help            show this help message and exit
 
 Commands:
-  {project,pyenv,service,status,venv}
+  {project,pyenv,service,status,venv,version}
     project             Creates a bare-bones Python pyproject.toml file to
                         facilitate installation by pipx or pip.
     pyenv               Updates all pyenv python versions and creates links to
@@ -31,6 +31,7 @@ Commands:
     status              Reports systemctl status of services and timers
                         installed from the current directory.
     venv                Creates a Python virtual environment.
+    version             Reports program version.
 ```
 
 Type `pinstall <command> -h` to see specific help/usage for any
@@ -177,6 +178,17 @@ options:
   -W, --no-wheel        don't install wheel in venv
   -v, --verbose         verbose pip install (can add multiple times to
                         increase verbosity)
+```
+
+### Command `version`
+
+```
+usage: pinstall version [-h]
+
+Reports program version.
+
+options:
+  -h, --help  show this help message and exit
 ```
 
 ## Command `venv` usage with pyenv
