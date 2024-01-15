@@ -31,7 +31,7 @@ Commands:
     status              Reports systemctl status of services and timers
                         installed from the current directory.
     venv                Creates a Python virtual environment.
-    version             Reports program version.
+    version             Reports this program's version.
 ```
 
 Type `pinstall <command> -h` to see specific help/usage for any
@@ -185,7 +185,7 @@ options:
 ```
 usage: pinstall version [-h]
 
-Reports program version.
+Reports this program's version.
 
 options:
   -h, --help  show this help message and exit
