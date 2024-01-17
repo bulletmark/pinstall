@@ -105,7 +105,7 @@ Template strings can be any of the following:
     PROGDIR   : Same as WORKDIR
     BASENAME  : Directory name of the service file
     PROG      : Stem name of the service file (i.e. "name" in "name.service")
-    PROGTITLE : Upper case of PROG
+    PROGTITLE : Upper case PROG
 
 Template strings are specified in .service and .timer files by wrapping
 them in hash symbols. Installed copies of these source files have all
@@ -237,7 +237,9 @@ virtual environment in either of two ways:
    link 3.7 which initially points to 3.7.4 but will automatically use
    3.7.5 when/if the minor version gets updated (i.e. after you have
    done a later `pinstall pyenv` to find and install a new 3.7.5). Note
-   that python minor version updates are always backwards compatible.
+   that python minor (i.e. maintenance) version updates are [always
+   backwards
+   compatible](https://devguide.python.org/developer-workflow/development-cycle/index.html#maintenance-branches).
 
 Note that whenever you run `pinstall venv` and specify a `-P/--pyenv`
 version then pinstall will always first silently update the pyenv links

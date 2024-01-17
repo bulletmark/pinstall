@@ -18,7 +18,7 @@ Template strings can be any of the following:
     PROGDIR   : Same as WORKDIR
     BASENAME  : Directory name of the service file
     PROG      : Stem name of the service file (i.e. "name" in "name.service")
-    PROGTITLE : Upper case of PROG
+    PROGTITLE : Upper case PROG
 
 Template strings are specified in .service and .timer files by wrapping
 them in hash symbols. Installed copies of these source files have all
