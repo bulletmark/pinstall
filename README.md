@@ -144,7 +144,7 @@ options:
 ```
 usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYENV]
                         [-f REQUIREMENTS_FILE] [-r] [-u] [-i [PACKAGE ...]]
-                        [-w] [-W] [-v]
+                        [-w] [-W] [-R] [-v]
                         [args ...]
 
 Creates a Python virtual environment.
@@ -176,6 +176,7 @@ options:
   -w, --without-pip     don't install pip or requirements in venv (i.e. pass
                         --without-pip to python -m venv)
   -W, --no-wheel        don't install wheel in venv
+  -R, --remove          just remove any existing venv and finish
   -v, --verbose         verbose pip install (can add multiple times to
                         increase verbosity)
 ```

@@ -70,6 +70,8 @@ def init(parser: ArgumentParser) -> None:
                         '(i.e. pass --without-pip to python -m venv)')
     parser.add_argument('-W', '--no-wheel', action='store_true',
                         help='don\'t install wheel in venv')
+    parser.add_argument('-R', '--remove', action='store_true',
+                        help='just remove any existing venv and finish')
     parser.add_argument('-v', '--verbose', action='count', default=0,
                         help='verbose pip install (can add multiple times to '
                         'increase verbosity)')
@@ -104,6 +106,12 @@ def main(args: Namespace) -> Optional[str]:
         pyexe = args.python
 
     vdir = Path(args.dir)
+
+    if args.remove:
+        if vdir.exists():
+            shutil.rmtree(vdir)
+        return
+
     if '--upgrade' not in args.args and vdir.exists():
         print(f'### Removing existing {vdir}/ ..')
         shutil.rmtree(vdir)
