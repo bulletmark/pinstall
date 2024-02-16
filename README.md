@@ -14,7 +14,7 @@ https://github.com/bulletmark/pinstall.
 Type `pinstall` or `pinstall -h` to view the usage summary:
 
 ```
-usage: pinstall [-h] {project,pyenv,service,status,venv,version} ...
+usage: pinstall [-h] {project,pyenv,service,status,uvenv,venv,version} ...
 
 Installer/utility tool for Python programs.
 
@@ -22,7 +22,7 @@ options:
   -h, --help            show this help message and exit
 
 Commands:
-  {project,pyenv,service,status,venv,version}
+  {project,pyenv,service,status,uvenv,venv,version}
     project             Creates a bare-bones Python pyproject.toml file to
                         facilitate installation by pipx or pip.
     pyenv               Updates all pyenv python versions and creates links to
@@ -30,6 +30,8 @@ Commands:
     service             Installs systemd services and corresponding timers.
     status              Reports systemctl status of services and timers
                         installed from the current directory.
+    uvenv               Creates a Python virtual environment using uv
+                        (experimental).
     venv                Creates a Python virtual environment.
     version             Reports this program's version.
 ```
@@ -139,6 +141,47 @@ options:
   -u, --user  report for user service
 ```
 
+### Command `uvenv`
+
+```
+usage: pinstall uvenv [-h] [-d DIR] [-p PYTHON | -P PYENV | -u UV]
+                         [-f REQUIREMENTS_FILE] [-r] [-i [PACKAGE ...]] [-R]
+                         [args ...]
+
+Creates a Python virtual environment using uv (experimental).
+
+Runs `uv venv` to create a venv (optionally for the specified
+Python name, or path, or pyenv Python version) then installs all package
+dependencies from 1) requirements.txt if present, or 2) from
+pyproject.toml if present.
+
+[uv](https://github.com/astral-sh/uv) is a new Python installation tool
+which is more efficient and faster than `python -m venv` and `pip`. You
+can use the `uvenv` command pretty much in place of `venv` and it will
+work similarly. At the moment the `uvenv` command is experimental but if
+the `uv` tool succeeds, `uvenv` will likely replace `venv`.
+
+positional arguments:
+  args                  optional arguments to `uv venv` command(add by
+                        starting with "--"). See options in `uv venv -h`
+
+options:
+  -h, --help            show this help message and exit
+  -d DIR, --dir DIR     directory name to create, default="venv"
+  -p PYTHON, --python PYTHON
+                        path to python executable, default="python3"
+  -P PYENV, --pyenv PYENV
+                        pyenv python version to use, i.e. from `pyenv
+                        versions`, e.g. "3.9".
+  -u UV, --uv UV        path to uv executable, default="uv"
+  -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
+                        default="requirements.txt"
+  -r, --no-require      don't pip install requirements/dependencies
+  -i [PACKAGE ...], --install [PACKAGE ...]
+                        also install (1 or more) given packages
+  -R, --remove          just remove any existing venv and finish
+```
+
 ### Command `venv`
 
 ```
@@ -196,8 +239,8 @@ options:
 
 [Pyenv](https://github.com/pyenv/pyenv) is a popular tool to easily
 install and switch between multiple versions of Python. So for example,
-you can use `pyenv` + `pinstall` to easily test a Python program with an
-older or newer version than your system Python.
+you can use `pyenv` + `pinstall venv` to easily test a Python program
+with an older or newer version than your system Python.
 
 E.g. Install Python 3.7 and then create a virtual enviroment (in the
 current directory) using it:
@@ -246,6 +289,14 @@ Note that whenever you run `pinstall venv` and specify a `-P/--pyenv`
 version then pinstall will always first silently update the pyenv links
 implicitly to ensure the latest major version links are correct before
 creating your new virtual environment.
+
+## Experimental command `uvenv`
+
+[uv](https://github.com/astral-sh/uv) is a new Python installation tool
+which is more efficient and faster than `python -m venv` and `pip`. You
+can use the `uvenv` command pretty much in place of `venv` and it will
+work similarly. At the moment the `uvenv` command is experimental but if
+the `uv` tool succeeds, `uvenv` will likely replace `venv`.
 
 ## Installation
 
