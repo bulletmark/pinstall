@@ -106,10 +106,10 @@ def main(args: Namespace) -> Optional[str]:
             for overs in outdates:
                 print(f'### {overs}: purging ...')
                 run(f'pyenv uninstall -f {overs}')
-        elif latest:
-            for uvers in updates:
-                print(f'### {uvers}: updating ...')
-                run(f'pyenv install -s {latest}')
+        else:
+            for newv in updates:
+                print(f'### {newv}: installing ...')
+                run(f'pyenv install -s {newv}')
 
     # Ensure we always update all the major version symlinks
     update_symlinks(args.remove_major_symlinks)
