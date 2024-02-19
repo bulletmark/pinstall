@@ -129,7 +129,7 @@ def main(args: Namespace) -> Optional[str]:
     # Create the venv ..
     os.environ['VIRTUAL_ENV'] = str(vdir)
     opts = f'-p {pyexe} ' + ' '.join(args.args)
-    run(f'uv venv {opts.rstrip()} {vdir}')
+    run(f'{uv} venv {opts.rstrip()} {vdir}')
     if not vdir.exists():
         return None
 
@@ -145,10 +145,10 @@ def main(args: Namespace) -> Optional[str]:
                 reqfile = fp and Path(fp.name)
 
         if reqfile:
-            run(f'uv pip install -r "{reqfile}"')
+            run(f'VIRTUAL_ENV={vdir} {uv} pip install -r "{reqfile}"')
 
     if args.install:
         pkgs = ' '.join(args.install)
-        run(f'{uv} pip install {pkgs}')
+        run(f'VIRTUAL_ENV={vdir} {uv} pip install {pkgs}')
 
     return None
