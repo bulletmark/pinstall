@@ -8,10 +8,11 @@ dependencies from 1) requirements.txt if present, or 2) from
 pyproject.toml if present.
 
 [uv](https://github.com/astral-sh/uv) is a new Python installation tool
-which is more efficient and faster than `python -m venv` and `pip`. You
-can use the `uvenv` command pretty much in place of `venv` and it will
-work similarly. At the moment the `uvenv` command is experimental but if
-the `uv` tool succeeds, `uvenv` will likely replace `venv`.
+which is more efficient and **much** faster than `python -m venv` and
+`pip`. You can use the `uvenv` command pretty much in place of `venv`
+and it will work similarly. At the moment the `uvenv` command is
+experimental but if the `uv` tool succeeds, `uvenv` will likely replace
+`venv`.
 '''
 import os
 import shutil
