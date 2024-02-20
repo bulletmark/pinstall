@@ -152,13 +152,14 @@ Installs or updates the uv tool.
 
 Read about uv at https://github.com/astral-sh/uv.
 If run this as root/sudo, it installs to /usr/bin/uv otherwise it
-installs as your user to $HOME/.local/bin/uv.
+installs as your user to $HOME/.local/bin/uv. Requires curl to be
+installed.
 
 options:
   -h, --help            show this help message and exit
   -r, --remove          just remove any existing uv executable
   -p PREFIX, --prefix PREFIX
-                        install to /bin under given system prefix
+                        install to /bin under given system prefix path
 ```
 
 ### Command `uvenv`
