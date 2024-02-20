@@ -30,6 +30,8 @@ def init(parser: ArgumentParser) -> None:
                         help='just remove any existing uv executable')
     parser.add_argument('-p', '--prefix',
                         help='install to /bin under given system prefix path')
+    parser.add_argument('-V', '--version', action='store_true',
+                        help='just report version of installed uv executable')
 
 def main(args: Namespace) -> Optional[str]:
     'Called to action this command'
@@ -44,11 +46,17 @@ def main(args: Namespace) -> Optional[str]:
     else:
         prefix = Path('~/.local').expanduser()
 
-    if not args.remove:
+    if not args.remove and not args.version:
         prefix.mkdir(exist_ok=True, parents=True)
 
     uv = prefix / 'bin' / 'uv'
     ver_exist = get_ver(uv)
+
+    if args.version:
+        if ver_exist:
+            print(f'{uv} {ver_exist}')
+            return None
+        return f'{uv} does not exist.'
 
     if args.remove:
         if ver_exist:

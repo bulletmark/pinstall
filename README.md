@@ -146,7 +146,7 @@ options:
 ### Command `uv`
 
 ```
-usage: pinstall uv [-h] [-r] [-p PREFIX]
+usage: pinstall uv [-h] [-r] [-p PREFIX] [-V]
 
 Installs or updates the uv tool.
 
@@ -160,6 +160,7 @@ options:
   -r, --remove          just remove any existing uv executable
   -p PREFIX, --prefix PREFIX
                         install to /bin under given system prefix path
+  -V, --version         just report version of installed uv executable
 ```
 
 ### Command `uvenv`
