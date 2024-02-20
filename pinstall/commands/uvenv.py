@@ -145,10 +145,10 @@ def main(args: Namespace) -> Optional[str]:
                 reqfile = fp and Path(fp.name)
 
         if reqfile:
-            run(f'VIRTUAL_ENV={vdir} {uv} pip install -r "{reqfile}"')
+            run(f'{uv} pip install -r "{reqfile}"')
 
     if args.install:
         pkgs = ' '.join(args.install)
-        run(f'VIRTUAL_ENV={vdir} {uv} pip install {pkgs}')
+        run(f'{uv} pip install {pkgs}')
 
     return None
