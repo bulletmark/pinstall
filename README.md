@@ -14,7 +14,8 @@ https://github.com/bulletmark/pinstall.
 Type `pinstall` or `pinstall -h` to view the usage summary:
 
 ```
-usage: pinstall [-h] {project,pyenv,service,status,uvenv,venv,version} ...
+usage: pinstall [-h]
+                   {project,pyenv,service,status,uv,uvenv,venv,version} ...
 
 Installer/utility tool for Python programs.
 
@@ -22,7 +23,7 @@ options:
   -h, --help            show this help message and exit
 
 Commands:
-  {project,pyenv,service,status,uvenv,venv,version}
+  {project,pyenv,service,status,uv,uvenv,venv,version}
     project             Creates a bare-bones Python pyproject.toml file to
                         facilitate installation by pipx or pip.
     pyenv               Updates all pyenv python versions and creates links to
@@ -30,6 +31,7 @@ Commands:
     service             Installs systemd services and corresponding timers.
     status              Reports systemctl status of services and timers
                         installed from the current directory.
+    uv                  Installs or updates the uv tool.
     uvenv               Creates a Python virtual environment using uv
                         (experimental).
     venv                Creates a Python virtual environment.
@@ -139,6 +141,24 @@ positional arguments:
 options:
   -h, --help  show this help message and exit
   -u, --user  report for user service
+```
+
+### Command `uv`
+
+```
+usage: pinstall uv [-h] [-r] [-p PREFIX]
+
+Installs or updates the uv tool.
+
+Read about uv at https://github.com/astral-sh/uv.
+If run this as root/sudo, it installs to /usr/bin/uv otherwise it
+installs as your user to $HOME/.local/bin/uv.
+
+options:
+  -h, --help            show this help message and exit
+  -r, --remove          just remove any existing uv executable
+  -p PREFIX, --prefix PREFIX
+                        install to /bin under given system prefix
 ```
 
 ### Command `uvenv`
