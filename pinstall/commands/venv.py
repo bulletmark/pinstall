@@ -108,9 +108,11 @@ def main(args: Namespace) -> Optional[str]:
     vdir = Path(args.dir)
 
     if args.remove:
-        if vdir.exists():
+        if vdir.is_dir():
+            print(f'Removing {vdir}/ ..')
             shutil.rmtree(vdir)
-        return None
+            return None
+        return f'{vdir}/ does not exist'
 
     if '--upgrade' not in args.args and vdir.exists():
         print(f'### Removing existing {vdir}/ ..')
