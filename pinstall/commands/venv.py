@@ -2,7 +2,7 @@
 '''
 Creates a Python virtual environment.
 
-Runs `python -m venv` to create a venv (optionally for the specified
+Runs `python -m venv` to create a `.venv/` (optionally for the specified
 Python name, or path, or pyenv Python version); adds a .gitignore to it
 to be automatically ignored by git; upgrades the venv with the latest
 pip + setuptools + wheel; then installs all package dependencies from
@@ -18,7 +18,7 @@ from . import pyenv
 
 from ..run import run
 
-DEFDIR = 'venv'
+DEFDIR = '.venv'
 DEFEXE = 'python3'
 DEFREQ = 'requirements.txt'
 PYPROJ = 'pyproject.toml'

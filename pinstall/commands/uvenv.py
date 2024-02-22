@@ -2,8 +2,8 @@
 '''
 Creates a Python virtual environment using uv (experimental).
 
-Runs `uv venv` to create a venv (optionally for the specified
-Python name, or path, or pyenv Python version) then installs all package
+Runs `uv venv` to create a `.venv/` (optionally for the specified Python
+name, or path, or pyenv Python version) then installs all package
 dependencies from 1) requirements.txt if present, or 2) from
 pyproject.toml if present.
 
@@ -25,7 +25,7 @@ from typing import Any, Optional
 from ..run import run
 from . import pyenv
 
-DEFDIR = 'venv'
+DEFDIR = '.venv'
 DEFEXE = 'python3'
 DEFUV = 'uv'
 DEFREQ = 'requirements.txt'

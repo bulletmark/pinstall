@@ -172,8 +172,8 @@ usage: pinstall uvenv [-h] [-d DIR] [-p PYTHON | -P PYENV | -u UV]
 
 Creates a Python virtual environment using uv (experimental).
 
-Runs `uv venv` to create a venv (optionally for the specified
-Python name, or path, or pyenv Python version) then installs all package
+Runs `uv venv` to create a `.venv/` (optionally for the specified Python
+name, or path, or pyenv Python version) then installs all package
 dependencies from 1) requirements.txt if present, or 2) from
 pyproject.toml if present.
 
@@ -190,7 +190,7 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -d DIR, --dir DIR     directory name to create, default="venv"
+  -d DIR, --dir DIR     directory name to create, default=".venv"
   -p PYTHON, --python PYTHON
                         path to python executable, default="python3"
   -P PYENV, --pyenv PYENV
@@ -215,7 +215,7 @@ usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYENV]
 
 Creates a Python virtual environment.
 
-Runs `python -m venv` to create a venv (optionally for the specified
+Runs `python -m venv` to create a `.venv/` (optionally for the specified
 Python name, or path, or pyenv Python version); adds a .gitignore to it
 to be automatically ignored by git; upgrades the venv with the latest
 pip + setuptools + wheel; then installs all package dependencies from
@@ -227,7 +227,7 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -d DIR, --dir DIR     directory name to create, default="venv"
+  -d DIR, --dir DIR     directory name to create, default=".venv"
   -p PYTHON, --python PYTHON
                         python executable, default="python3"
   -P PYENV, --pyenv PYENV
@@ -271,7 +271,7 @@ current directory) using it:
 ```sh
 $ pyenv install 3.7
 $ pinstall venv -P 3.7
-$ venv/bin/python --version
+$ .venv/bin/python --version
 Python 3.7.17
 ```
 
