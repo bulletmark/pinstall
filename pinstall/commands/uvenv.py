@@ -16,44 +16,18 @@ experimental but if the `uv` tool succeeds, `uvenv` will likely replace
 '''
 import os
 import shutil
-import sys
-import tempfile
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 from ..run import run
+from ..pyproj import get_requirements
 from . import pyenv
 
 DEFDIR = '.venv'
 DEFEXE = 'python3'
 DEFUV = 'uv'
 DEFREQ = 'requirements.txt'
-PYPROJ = 'pyproject.toml'
-
-def get_pyproj_reqs() -> Any:
-    'Return a requirements file built from dependencies in PYPROJ if it exists'
-    pyproj = Path(PYPROJ)
-    if not pyproj.exists():
-        return None
-
-    if sys.version_info >= (3, 11):
-        import tomllib
-    else:
-        import tomli as tomllib  # type: ignore
-
-    with pyproj.open('rb') as fp:
-        conf = tomllib.load(fp)
-
-    dependencies = conf.get('project', {}).get('dependencies', [])
-    if not dependencies:
-        return None
-
-    tmpfile = tempfile.NamedTemporaryFile(prefix=f'{pyproj.stem}.',
-                                          suffix='.txt')
-    tmpfile.writelines(line.encode() + b'\n' for line in dependencies)
-    tmpfile.flush()
-    return tmpfile
 
 def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
@@ -136,17 +110,10 @@ def main(args: Namespace) -> Optional[str]:
         return None
 
     if not args.no_require:
-        if args.requirements_file:
-            reqfile = Path(args.requirements_file)
-            if not reqfile.exists():
-                return f'Error: file "{reqfile}" does not exist.'
-        else:
-            reqfile = Path(DEFREQ)
-            if not reqfile.exists():
-                fp = get_pyproj_reqs()
-                reqfile = fp and Path(fp.name)
-
+        reqfile = get_requirements(args.requirements_file, DEFREQ)
         if reqfile:
+            if isinstance(reqfile, str):
+                return reqfile
             run(f'{uv} pip install -r "{reqfile}"')
 
     if args.install:
