@@ -166,7 +166,7 @@ options:
 ### Command `uvenv`
 
 ```
-usage: pinstall uvenv [-h] [-d DIR] [-p PYTHON | -P PYENV | -u UV]
+usage: pinstall uvenv [-h] [-d DIR] [-p PYTHON | -P PYENV] [-u UV]
                          [-f REQUIREMENTS_FILE] [-r] [-i [PACKAGE ...]] [-R]
                          [args ...]
 

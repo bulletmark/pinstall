@@ -39,7 +39,7 @@ def init(parser: ArgumentParser) -> None:
     xgroup.add_argument('-P', '--pyenv',
                         help='pyenv python version to use, '
                         'i.e. from `pyenv versions`, e.g. "3.9".')
-    xgroup.add_argument('-u', '--uv',
+    parser.add_argument('-u', '--uv',
                         help=f'path to uv executable, default="{DEFUV}"')
     parser.add_argument('-f', '--requirements-file',
                         help=f'default="{DEFREQ}"')
