@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 '''
-Creates a Python virtual environment.
+Creates a Python virtual environment using venv + pip.
 
 Runs `python -m venv` to create a `.venv/` (optionally for the specified
 Python name, or path, or pyenv Python version); adds a .gitignore to it

@@ -32,9 +32,8 @@ Commands:
     status              Reports systemctl status of services and timers
                         installed from the current directory.
     uv                  Installs or updates the uv tool.
-    uvenv               Creates a Python virtual environment using uv
-                        (experimental).
-    venv                Creates a Python virtual environment.
+    uvenv               Creates a Python virtual environment using uv.
+    venv                Creates a Python virtual environment using venv + pip.
     version             Reports this program's version.
 ```
 
@@ -170,7 +169,7 @@ usage: pinstall uvenv [-h] [-d DIR] [-p PYTHON | -P PYENV] [-u UV]
                          [-f REQUIREMENTS_FILE] [-r] [-i [PACKAGE ...]] [-R]
                          [args ...]
 
-Creates a Python virtual environment using uv (experimental).
+Creates a Python virtual environment using uv.
 
 Runs `uv venv` to create a `.venv/` (optionally for the specified Python
 name, or path, or pyenv Python version) then installs all package
@@ -213,7 +212,7 @@ usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYENV]
                         [-w] [-W] [-R] [-v]
                         [args ...]
 
-Creates a Python virtual environment.
+Creates a Python virtual environment using venv + pip.
 
 Runs `python -m venv` to create a `.venv/` (optionally for the specified
 Python name, or path, or pyenv Python version); adds a .gitignore to it

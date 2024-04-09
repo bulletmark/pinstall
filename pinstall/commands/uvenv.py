@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 '''
-Creates a Python virtual environment using uv (experimental).
+Creates a Python virtual environment using uv.
 
 Runs `uv venv` to create a `.venv/` (optionally for the specified Python
 name, or path, or pyenv Python version) then installs all package
