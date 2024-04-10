@@ -55,6 +55,9 @@ style setup.py). Run this command in the same directory as the files and
 it will create a bare-bones ./pyproject.toml file. This will allow you
 to install the app using `pipx install .`, or `pip install .` commands.
 
+Will also parse PEP 723 dependencies from a script tag in the Python
+file.
+
 Your app.py must have a main() function to be called when the app is
 run.
 
@@ -326,7 +329,7 @@ experimental but if the `uv` tool succeeds, `uvenv` will likely replace
 Arch Linux users can install [pinstall from the
 AUR](https://aur.archlinux.org/packages/pinstall).
 
-Python 3.6 or later is required and the [`sudo`](https://www.sudo.ws/)
+Python 3.8 or later is required and the [`sudo`](https://www.sudo.ws/)
 program must be installed (to use the `service` command).
 
 Note [pinstall is on PyPI](https://pypi.org/project/pinstall/) so just

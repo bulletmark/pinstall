@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "pinstall"
 description = "Installer Tool for Python Programs"
 readme = "README.md"
-requires-python = ">=3.6"
+requires-python = ">=3.8"
 keywords = ["venv", "virtualenv", "systemd", "service", "pip", "pipx",
 	 "pyproject.toml"]
 classifiers = [

@@ -10,6 +10,9 @@ style setup.py). Run this command in the same directory as the files and
 it will create a bare-bones ./pyproject.toml file. This will allow you
 to install the app using `pipx install .`, or `pip install .` commands.
 
+Will also parse PEP 723 dependencies from a script tag in the Python
+file.
+
 Your app.py must have a main() function to be called when the app is
 run.
 '''
@@ -18,7 +21,7 @@ import getpass
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from string import Template
-from typing import Optional
+from typing import Optional, List
 
 DEFREQ = 'requirements.txt'
 PYTOML = 'pyproject.toml'
@@ -37,7 +40,7 @@ version = "1.0"
 classifiers = [
   "Programming Language :: Python :: 3",
 ]
-dynamic = [$dependencies]
+dependencies = [$dependencies]
 
 [[project.authors]]
 name = "$user"
@@ -46,10 +49,32 @@ name = "$user"
 "$name" = "$pyname:main"
 '''
 
-addendum = '''
-[tool.setuptools.dynamic]
-dependencies = {file = ["$reqfile"]}
-'''
+def parse_script_tag(file: Path) -> List[str]:
+    'Parses PEP723 dependencies from a script tag in a Python file'
+    have_script = False
+    have_depends = False
+    have_end = False
+    depends = []
+    with file.open() as fp:
+        for line in fp:
+            line = line.strip()
+            if line == '# /// script':
+                have_script = True
+                continue
+            if not have_script:
+                continue
+            if line == '# dependencies = [':
+                have_depends = True
+                continue
+            if not have_depends:
+                continue
+            if line == '# ]':
+                have_end = True
+                break
+            line = line.lstrip('#').strip()
+            if line and not line.startswith('#'):
+                depends.append(line.lstrip('"').rstrip('",'))
+    return depends if have_end else []
 
 def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
@@ -118,21 +143,20 @@ def main(args: Namespace) -> Optional[str]:
     if not file.exists():
         return f'Error: "{file}" does not exist.'
 
-    dynamics = []
     if reqfile:
-        dynamics.append('dependencies')
-        template += addendum
+        dynamics = [ln for line in reqfile.read_text().splitlines() if
+                    (ln := line.strip()) and not ln.startswith('#')]
     else:
-        template = '\n'.join(line for line in template.splitlines()
-                             if not line.startswith('dynamic ')) + '\n'
+        dynamics = parse_script_tag(file)
+
+    depstr = ',\n'.join(f'  "{d}"' for d in dynamics)
 
     template_values = {
         'prog': args._prog,
         'name': name,
         'pyname': pyname,
         'user': getpass.getuser(),
-        'dependencies': ', '.join(f'"{d}"' for d in dynamics),
-        'reqfile': str(reqfile),
+        'dependencies': ('\n' + depstr + '\n') if depstr else '',
         'date': datetime.datetime.now().isoformat(sep=' ', timespec='seconds'),
     }
 
