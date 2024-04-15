@@ -13,7 +13,8 @@ from ..run import run
 
 valids = set(string.digits + '.')
 
-def update_symlinks(remove_symlinks: bool = False) -> None:
+def update_symlinks(*, remove_symlinks: bool = False,
+                    verbose: bool = False) -> None:
     'Update all symlinks in pyenv versions dir'
     basestr = run('pyenv root', capture=True)
     if not basestr:
@@ -30,6 +31,8 @@ def update_symlinks(remove_symlinks: bool = False) -> None:
         if all(c in valids for c in path.name):
             if path.is_symlink():
                 if remove_symlinks:
+                    if verbose:
+                        print(f'Removing link {path}')
                     path.unlink()
                 else:
                     oldlinks[path.name] = os.readlink(str(path))
@@ -55,13 +58,19 @@ def update_symlinks(remove_symlinks: bool = False) -> None:
     for name, tgt in oldlinks.items():
         new_tgt = newlinks.get(name)
         if not new_tgt or new_tgt != tgt:
-            Path(base / name).unlink()
+            path = Path(base / name)
+            path.unlink()
+            if verbose:
+                print(f'Removing old link {path}')
 
     # Create all needed new links
     for name, tgt in newlinks.items():
         old_tgt = oldlinks.get(name)
         if not old_tgt or old_tgt != tgt:
-            Path(base / name).symlink_to(tgt, target_is_directory=True)
+            path = Path(base / name)
+            if verbose:
+                print(f'Adding new link {path} -> {tgt}')
+            path.symlink_to(tgt, target_is_directory=True)
 
 def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
@@ -94,10 +103,10 @@ def main(args: Namespace) -> Optional[str]:
         if vers == latest:
             print(f'### {vers} up to date')
         elif latest in versions:
-            print(f'### {vers} -> {latest} (already installed)')
+            print(f'### {vers} -> {latest}')
             outdates.append(vers)
         else:
-            print(f'### {vers} -> {latest} (available, but not installed)')
+            print(f'### {vers} -> {latest} ({latest} is not installed)')
             if latest not in updates:
                 updates.append(latest)
 
@@ -112,5 +121,7 @@ def main(args: Namespace) -> Optional[str]:
                 run(f'pyenv install -s {newv}')
 
     # Ensure we always update all the major version symlinks
-    update_symlinks(args.remove_major_symlinks)
+    if not args.list:
+        update_symlinks(remove_symlinks=args.remove_major_symlinks,
+                        verbose=True)
     return None
