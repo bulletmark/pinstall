@@ -3,16 +3,15 @@
 Creates a Python virtual environment using venv + pip.
 
 Runs `python -m venv` to create a `.venv/` (optionally for the specified
-Python name, or path, or pyenv Python version); adds a .gitignore to it
-to be automatically ignored by git; upgrades the venv with the latest
-pip + setuptools + wheel; then installs all package dependencies from
-1) requirements.txt if present, or 2) from pyproject.toml if present.
+Python name, or path); adds a .gitignore to it to be automatically
+ignored by git; upgrades the venv with the latest pip + setuptools +
+wheel; then installs all package dependencies from 1) requirements.txt
+if present, or 2) from pyproject.toml if present.
 '''
 import shutil
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from typing import Optional
-from . import pyenv
 
 from ..run import run
 from ..pyproj import get_requirements
@@ -25,12 +24,8 @@ def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
     parser.add_argument('-d', '--dir', default=DEFDIR,
                         help='directory name to create, default="%(default)s"')
-    xgroup = parser.add_mutually_exclusive_group()
-    xgroup.add_argument('-p', '--python', default=DEFEXE,
+    parser.add_argument('-p', '--python', default=DEFEXE,
                         help='python executable, default="%(default)s"')
-    xgroup.add_argument('-P', '--pyenv',
-                        help='pyenv python version to use, '
-                        'i.e. from `pyenv versions`, e.g. "3.9".')
     parser.add_argument('-f', '--requirements-file',
                         help=f'default="{DEFREQ}"')
     parser.add_argument('-r', '--no-require', action='store_true',
@@ -56,29 +51,7 @@ def init(parser: ArgumentParser) -> None:
 
 def main(args: Namespace) -> Optional[str]:
     'Called to action this command'
-    if args.pyenv:
-        pyenv_root = run('pyenv root', capture=True)
-        if not pyenv_root:
-            return 'Error: Can not find pyenv. Is it installed?'
-
-        # Since we are about to use pyenv, make sure the links are up to
-        # date
-        pyenv.update_symlinks()
-
-        pyenv_version = run(f'pyenv latest {args.pyenv}', capture=True,
-                            ignore_error=True)
-        if not pyenv_version:
-            return f'Error: no pyenv version {args.pyenv} installed.'
-
-        pyexe_path = Path(pyenv_root, 'versions', pyenv_version,
-                          'bin', 'python')
-        if not pyexe_path.exists():
-            return f'Can not determine pyenv version for {args.pyenv}'
-
-        pyexe = str(pyexe_path)
-    else:
-        pyexe = args.python
-
+    pyexe = args.python
     vdir = Path(args.dir)
 
     if args.remove:

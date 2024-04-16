@@ -168,16 +168,15 @@ options:
 ### Command `uvenv`
 
 ```
-usage: pinstall uvenv [-h] [-d DIR] [-p PYTHON | -P PYENV] [-u UV]
+usage: pinstall uvenv [-h] [-d DIR] [-p PYTHON] [-u UV]
                          [-f REQUIREMENTS_FILE] [-r] [-i [PACKAGE ...]] [-R]
                          [args ...]
 
 Creates a Python virtual environment using uv.
 
 Runs `uv venv` to create a `.venv/` (optionally for the specified Python
-name, or path, or pyenv Python version) then installs all package
-dependencies from 1) requirements.txt if present, or 2) from
-pyproject.toml if present.
+name, or path) then installs all package dependencies from 1)
+requirements.txt if present, or 2) from pyproject.toml if present.
 
 [uv](https://github.com/astral-sh/uv) is a new Python installation tool
 which is more efficient and **much** faster than `python -m venv` and
@@ -195,9 +194,6 @@ options:
   -d DIR, --dir DIR     directory name to create, default=".venv"
   -p PYTHON, --python PYTHON
                         path to python executable, default="python3"
-  -P PYENV, --pyenv PYENV
-                        pyenv python version to use, i.e. from `pyenv
-                        versions`, e.g. "3.9".
   -u UV, --uv UV        path to uv executable, default="uv"
   -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"
@@ -210,18 +206,17 @@ options:
 ### Command `venv`
 
 ```
-usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYENV]
-                        [-f REQUIREMENTS_FILE] [-r] [-u] [-i [PACKAGE ...]]
-                        [-w] [-W] [-R] [-v]
+usage: pinstall venv [-h] [-d DIR] [-p PYTHON] [-f REQUIREMENTS_FILE] [-r]
+                        [-u] [-i [PACKAGE ...]] [-w] [-W] [-R] [-v]
                         [args ...]
 
 Creates a Python virtual environment using venv + pip.
 
 Runs `python -m venv` to create a `.venv/` (optionally for the specified
-Python name, or path, or pyenv Python version); adds a .gitignore to it
-to be automatically ignored by git; upgrades the venv with the latest
-pip + setuptools + wheel; then installs all package dependencies from
-1) requirements.txt if present, or 2) from pyproject.toml if present.
+Python name, or path); adds a .gitignore to it to be automatically
+ignored by git; upgrades the venv with the latest pip + setuptools +
+wheel; then installs all package dependencies from 1) requirements.txt
+if present, or 2) from pyproject.toml if present.
 
 positional arguments:
   args                  optional arguments to python -m venv (add by starting
@@ -232,9 +227,6 @@ options:
   -d DIR, --dir DIR     directory name to create, default=".venv"
   -p PYTHON, --python PYTHON
                         python executable, default="python3"
-  -P PYENV, --pyenv PYENV
-                        pyenv python version to use, i.e. from `pyenv
-                        versions`, e.g. "3.9".
   -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"
   -r, --no-require      don't pip install requirements/dependencies
@@ -260,27 +252,6 @@ options:
   -h, --help  show this help message and exit
 ```
 
-## Command `venv` usage with pyenv
-
-[Pyenv](https://github.com/pyenv/pyenv) is a popular tool to easily
-install and switch between multiple versions of Python. So for example,
-you can use `pyenv` + `pinstall venv` to easily test a Python program
-with an older or newer version than your system Python.
-
-E.g. Install Python 3.7 and then create a virtual enviroment (in the
-current directory) using it:
-
-```sh
-$ pyenv install 3.7
-$ pinstall venv -P 3.7
-$ .venv/bin/python --version
-Python 3.7.17
-```
-
-Note in this example that [pyenv](https://github.com/pyenv/pyenv)
-installed Python 3.7.17 because that was the latest 3.7 version
-available (at the time of writing).
-
 ## Management of pyenv versions
 
 [Pyenv](https://github.com/pyenv/pyenv) gives you the handy ability to
@@ -299,21 +270,16 @@ in the above example, `pinstall pyenv` will also create a link in your
 `pyenv` versions directory `3.7 -> 3.7.4`. This allows you to create a
 virtual environment in either of two ways:
 
-1. `pinstall venv -P 3.7.4` will create a virtual environment using
-   3.7.4 permanently, or:
+1. `pinstall venv -p ~/.pyenv/versions/3.7.4/bin/python` will create a
+   virtual environment using 3.7.4 permanently, or:
 
-2. `pinstall venv -P 3.7` will create a virtual environment using the
-   link 3.7 which initially points to 3.7.4 but will automatically use
-   3.7.5 when/if the minor version gets updated (i.e. after you have
-   done a later `pinstall pyenv` to find and install a new 3.7.5). Note
-   that python minor (i.e. maintenance) version updates are [always
-   backwards
+2. `pinstall venv -p ~/.pyenv/versions/3.7/bin/python` will create a
+   virtual environment using the link 3.7 which initially points to
+   3.7.4 but will automatically use 3.7.5 when/if the minor version gets
+   updated (i.e. after you have done a later `pinstall pyenv` to find
+   and install a new 3.7.5). Note that python minor (i.e. maintenance)
+   version updates are [always backwards
    compatible](https://devguide.python.org/developer-workflow/development-cycle/index.html#maintenance-branches).
-
-Note that whenever you run `pinstall venv` and specify a `-P/--pyenv`
-version then pinstall will always first silently update the pyenv links
-implicitly to ensure the latest major version links are correct before
-creating your new virtual environment.
 
 ## Experimental command `uvenv`
 

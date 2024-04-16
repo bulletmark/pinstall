@@ -3,9 +3,8 @@
 Creates a Python virtual environment using uv.
 
 Runs `uv venv` to create a `.venv/` (optionally for the specified Python
-name, or path, or pyenv Python version) then installs all package
-dependencies from 1) requirements.txt if present, or 2) from
-pyproject.toml if present.
+name, or path) then installs all package dependencies from 1)
+requirements.txt if present, or 2) from pyproject.toml if present.
 
 [uv](https://github.com/astral-sh/uv) is a new Python installation tool
 which is more efficient and **much** faster than `python -m venv` and
@@ -22,7 +21,6 @@ from typing import Optional
 
 from ..run import run
 from ..pyproj import get_requirements
-from . import pyenv
 
 DEFDIR = '.venv'
 DEFEXE = 'python3'
@@ -33,12 +31,8 @@ def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
     parser.add_argument('-d', '--dir', default=DEFDIR,
                         help='directory name to create, default="%(default)s"')
-    xgroup = parser.add_mutually_exclusive_group()
-    xgroup.add_argument('-p', '--python', default=DEFEXE,
+    parser.add_argument('-p', '--python', default=DEFEXE,
                         help='path to python executable, default="%(default)s"')
-    xgroup.add_argument('-P', '--pyenv',
-                        help='pyenv python version to use, '
-                        'i.e. from `pyenv versions`, e.g. "3.9".')
     parser.add_argument('-u', '--uv',
                         help=f'path to uv executable, default="{DEFUV}"')
     parser.add_argument('-f', '--requirements-file',
@@ -56,29 +50,7 @@ def init(parser: ArgumentParser) -> None:
 
 def main(args: Namespace) -> Optional[str]:
     'Called to action this command'
-    if args.pyenv:
-        pyenv_root = run('pyenv root', capture=True)
-        if not pyenv_root:
-            return 'Error: Can not find pyenv. Is it installed?'
-
-        # Since we are about to use pyenv, make sure the links are up to
-        # date
-        pyenv.update_symlinks()
-
-        pyenv_version = run(f'pyenv latest {args.pyenv}', capture=True,
-                            ignore_error=True)
-        if not pyenv_version:
-            return f'Error: no pyenv version {args.pyenv} installed.'
-
-        pyexe_path = Path(pyenv_root, 'versions', pyenv_version,
-                          'bin', 'python')
-        if not pyexe_path.exists():
-            return f'Can not determine pyenv version for {args.pyenv}'
-
-        pyexe = str(pyexe_path)
-    else:
-        pyexe = args.python
-
+    pyexe = args.python
     vdir = Path(args.dir)
 
     if args.remove:
