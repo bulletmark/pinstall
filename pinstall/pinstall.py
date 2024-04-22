@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# PYTHON_ARGCOMPLETE_OK
 'Installer/utility tool for Python programs.'
 # Author: Mark Blakeney, Apr 2023.
 
@@ -7,6 +8,8 @@ import importlib
 import sys
 from pathlib import Path
 from typing import Optional
+
+import argcomplete
 
 def main() -> Optional[str]:
     'Main code'
@@ -34,6 +37,9 @@ def main() -> Optional[str]:
             mainparser.error(f'"{name}" command must define a main()')
 
         parser.set_defaults(func=mod.main, parser=parser, name=name)
+
+    # Command arguments are now defined, so we can set up argcomplete
+    argcomplete.autocomplete(mainparser)
 
     args = mainparser.parse_args()
 

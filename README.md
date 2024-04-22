@@ -312,6 +312,15 @@ To upgrade:
 $ pipx upgrade pinstall
 ```
 
+## Command Line Tab Completion
+
+Command line shell [tab
+completion](https://en.wikipedia.org/wiki/Command-line_completion) is
+automatically enabled on `pinstall` commands and options using
+[`argcomplete`](https://github.com/kislyuk/argcomplete). You may need to
+first (once-only) [activate argcomplete global
+completion](https://github.com/kislyuk/argcomplete#global-completion).
+
 ## License
 
 Copyright (C) 2023 Mark Blakeney. This program is distributed under the
