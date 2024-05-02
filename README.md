@@ -193,7 +193,7 @@ options:
   -h, --help            show this help message and exit
   -d DIR, --dir DIR     directory name to create, default=".venv"
   -p PYTHON, --python PYTHON
-                        path to python executable, default="python3"
+                        python executable (or venv dir), default="python3"
   -u UV, --uv UV        path to uv executable, default="uv"
   -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"
@@ -226,7 +226,7 @@ options:
   -h, --help            show this help message and exit
   -d DIR, --dir DIR     directory name to create, default=".venv"
   -p PYTHON, --python PYTHON
-                        python executable, default="python3"
+                        python executable (or venv dir), default="python3"
   -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"
   -r, --no-require      don't pip install requirements/dependencies

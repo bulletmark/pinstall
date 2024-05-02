@@ -19,6 +19,7 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from typing import Optional
 
+from ..getpy import getpy
 from ..run import run
 from ..pyproj import get_requirements
 
@@ -32,7 +33,8 @@ def init(parser: ArgumentParser) -> None:
     parser.add_argument('-d', '--dir', default=DEFDIR,
                         help='directory name to create, default="%(default)s"')
     parser.add_argument('-p', '--python', default=DEFEXE,
-                        help='path to python executable, default="%(default)s"')
+                        help='python executable (or venv dir), '
+                        'default="%(default)s"')
     parser.add_argument('-u', '--uv',
                         help=f'path to uv executable, default="{DEFUV}"')
     parser.add_argument('-f', '--requirements-file',
@@ -50,7 +52,7 @@ def init(parser: ArgumentParser) -> None:
 
 def main(args: Namespace) -> Optional[str]:
     'Called to action this command'
-    pyexe = args.python
+    pyexe = getpy(args.python)
     vdir = Path(args.dir)
 
     if args.remove:

@@ -13,8 +13,9 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from typing import Optional
 
-from ..run import run
+from ..getpy import getpy
 from ..pyproj import get_requirements
+from ..run import run
 
 DEFDIR = '.venv'
 DEFEXE = 'python3'
@@ -25,7 +26,8 @@ def init(parser: ArgumentParser) -> None:
     parser.add_argument('-d', '--dir', default=DEFDIR,
                         help='directory name to create, default="%(default)s"')
     parser.add_argument('-p', '--python', default=DEFEXE,
-                        help='python executable, default="%(default)s"')
+                        help='python executable (or venv dir), '
+                        'default="%(default)s"')
     parser.add_argument('-f', '--requirements-file',
                         help=f'default="{DEFREQ}"')
     parser.add_argument('-r', '--no-require', action='store_true',
@@ -51,7 +53,7 @@ def init(parser: ArgumentParser) -> None:
 
 def main(args: Namespace) -> Optional[str]:
     'Called to action this command'
-    pyexe = args.python
+    pyexe = getpy(args.python)
     vdir = Path(args.dir)
 
     if args.remove:
