@@ -13,7 +13,6 @@ and it will work similarly. At the moment the `uvenv` command is
 experimental but if the `uv` tool succeeds, `uvenv` will likely replace
 `venv`.
 '''
-import os
 import shutil
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
@@ -77,21 +76,21 @@ def main(args: Namespace) -> Optional[str]:
         shutil.rmtree(vdir)
 
     # Create the venv ..
-    os.environ['VIRTUAL_ENV'] = str(vdir)
     opts = f'-p {pyexe} ' + ' '.join(args.args)
     run(f'{uv} venv {opts.rstrip()} {vdir}')
     if not vdir.exists():
         return None
 
+    vdir = vdir.resolve()
     if not args.no_require:
         reqfile = get_requirements(args.requirements_file, DEFREQ)
         if reqfile:
             if isinstance(reqfile, str):
                 return reqfile
-            run(f'{uv} pip install -r "{reqfile}"')
+            run(f'{uv} pip install -p {vdir} -r "{reqfile}"')
 
     if args.install:
         pkgs = ' '.join(args.install)
-        run(f'{uv} pip install {pkgs}')
+        run(f'{uv} pip install -p {vdir} {pkgs}')
 
     return None
