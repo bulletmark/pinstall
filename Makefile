@@ -2,12 +2,12 @@ NAME = $(shell basename $(CURDIR))
 PYNAME = $(subst -,_,$(NAME))
 
 check:
-	ruff check .
-	flake8 .
-	mypy .
-	pyright .
+	ruff check $(NAME)/*.py $(NAME)/*/*.py
+	flake8 $(NAME)/*.py $(NAME)/*/*.py
+	mypy $(NAME)/*.py $(NAME)/*/*.py
+	pyright $(NAME)/*.py $(NAME)/*/*.py
 	vermin -vv --exclude importlib.metadata --exclude tomllib \
-		--eval-annotations --no-tips -i */*.py */*/*.py
+		--no-tips -i $(NAME)/*.py $(NAME)/*/*.py
 
 upload: build
 	twine3 upload dist/*

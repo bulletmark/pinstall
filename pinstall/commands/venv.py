@@ -8,10 +8,11 @@ ignored by git; upgrades the venv with the latest pip + setuptools +
 wheel; then installs all package dependencies from 1) requirements.txt
 if present, or 2) from pyproject.toml if present.
 '''
+from __future__ import annotations
+
 import shutil
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from typing import Optional
 
 from ..getpy import getpy
 from ..pyproj import get_requirements
@@ -51,7 +52,7 @@ def init(parser: ArgumentParser) -> None:
                         '(add by starting with "--"). See options in '
                         '`python -m venv -h`')
 
-def main(args: Namespace) -> Optional[str]:
+def main(args: Namespace) -> str | None:
     'Called to action this command'
     pyexe = getpy(args.python)
     vdir = Path(args.dir)

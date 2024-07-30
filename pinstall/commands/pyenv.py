@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 'Updates all pyenv python versions and creates links to current major versions.'
+from __future__ import annotations
+
 import os
 import string
 from argparse import ArgumentParser, Namespace
 from collections import defaultdict
 from pathlib import Path
-from typing import Optional
 
 from packaging import version
 
@@ -81,7 +82,7 @@ def init(parser: ArgumentParser) -> None:
     parser.add_argument('-m', '--remove-major-symlinks', action='store_true',
                      help='remove all symlinks to major versions')
 
-def main(args: Namespace) -> Optional[str]:
+def main(args: Namespace) -> str | None:
     'Called to action this command'
     vstr = run('pyenv versions', capture=True)
     if not vstr:

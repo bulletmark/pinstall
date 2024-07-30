@@ -7,16 +7,17 @@ If run this as root/sudo, it installs to /usr/bin/uv otherwise it
 installs as your user to $HOME/.local/bin/uv. Requires curl to be
 installed.
 '''
+from __future__ import annotations
+
 import os
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from typing import Optional
 
 from ..run import run
 
 URL = 'https://astral.sh/uv/install.sh'
 
-def get_ver(uv: Path) -> Optional[str]:
+def get_ver(uv: Path) -> str | None:
     'Run the specified uv to return the version'
     if uv.is_file():
         out = run(f'{uv} --version', capture=True)
@@ -33,7 +34,7 @@ def init(parser: ArgumentParser) -> None:
     parser.add_argument('-V', '--version', action='store_true',
                         help='just report version of installed uv executable')
 
-def main(args: Namespace) -> Optional[str]:
+def main(args: Namespace) -> str | None:
     'Called to action this command'
     # Use system prefix if root, otherwise use user prefix
     if args.prefix:

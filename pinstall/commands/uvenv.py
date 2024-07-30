@@ -13,10 +13,11 @@ and it will work similarly. At the moment the `uvenv` command is
 experimental but if the `uv` tool succeeds, `uvenv` will likely replace
 `venv`.
 '''
+from __future__ import annotations
+
 import shutil
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from typing import Optional
 
 from ..getpy import getpy
 from ..run import run
@@ -49,7 +50,7 @@ def init(parser: ArgumentParser) -> None:
                         '(add by starting with "--"). See options in '
                         '`uv venv -h`')
 
-def main(args: Namespace) -> Optional[str]:
+def main(args: Namespace) -> str | None:
     'Called to action this command'
     pyexe = getpy(args.python)
     vdir = Path(args.dir)

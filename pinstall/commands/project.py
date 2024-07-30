@@ -16,12 +16,13 @@ file.
 Your app.py must have a main() function to be called when the app is
 run.
 '''
+from __future__ import annotations
+
 import datetime
 import getpass
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from string import Template
-from typing import Optional, List
 
 DEFREQ = 'requirements.txt'
 PYTOML = 'pyproject.toml'
@@ -49,7 +50,7 @@ name = "$user"
 "$name" = "$pyname:main"
 '''
 
-def parse_script_tag(file: Path) -> List[str]:
+def parse_script_tag(file: Path) -> list[str]:
     'Parses PEP723 dependencies from a script tag in a Python file'
     have_script = False
     have_depends = False
@@ -87,7 +88,7 @@ def init(parser: ArgumentParser) -> None:
                         f'create {PYTOML} for. If not specified then '
                         'looks for a single .py file in current directory.')
 
-def main(args: Namespace) -> Optional[str]:
+def main(args: Namespace) -> str | None:
     'Called to action this command'
     global template
 

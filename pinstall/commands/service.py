@@ -25,13 +25,14 @@ them in hash symbols. Installed copies of these source files have all
 instances of template strings replaced by their value. E.g. #HOME#
 gets replaced by the user's home directory path.
 '''
+from __future__ import annotations
+
 import getpass
 import os
 import sys
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from pwd import getpwnam
-from typing import Dict, Optional
 
 from ..run import run
 
@@ -72,7 +73,7 @@ def remove_unit(args: Namespace, unit: Path) -> bool:
 
     return True
 
-def create_unit(args: Namespace, templdata: Dict[str, str], sysdpath: Path,
+def create_unit(args: Namespace, templdata: dict[str, str], sysdpath: Path,
                 unit: Path) -> bool:
     'Create given unit file'
     target = sysdpath / unit.name
@@ -103,7 +104,7 @@ def create_unit(args: Namespace, templdata: Dict[str, str], sysdpath: Path,
 
     return True
 
-def main(args: Namespace) -> Optional[str]:
+def main(args: Namespace) -> str | None:
     'Called to action this command'
     userid = os.getuid()
     if not args.user:

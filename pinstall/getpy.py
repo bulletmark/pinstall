@@ -1,9 +1,10 @@
 #!/usr/bin/python3
+from __future__ import annotations
+
 import platform
 from pathlib import Path
-from typing import Optional
 
-def getpy(pyfile: Optional[str]) -> Optional[str]:
+def getpy(pyfile: str | None) -> str | None:
     if not pyfile:
         return None
 

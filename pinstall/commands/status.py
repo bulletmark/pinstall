@@ -3,10 +3,11 @@
 Reports systemctl status of services and timers installed from the
 current directory.
 '''
+from __future__ import annotations
+
 import sys
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from typing import Optional
 
 from ..run import run
 
@@ -17,7 +18,7 @@ def init(parser: ArgumentParser) -> None:
     parser.add_argument('units', nargs='*',
                         help='systemd service file[s]')
 
-def main(args: Namespace) -> Optional[str]:
+def main(args: Namespace) -> str | None:
     'Called to action this command'
     units = [Path(p) for p in args.units] \
             if args.units else list(Path.cwd().glob('*.service'))

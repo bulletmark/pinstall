@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 'Common module to run given command'
+from __future__ import annotations
+
 import subprocess
 import sys
-from typing import Optional
 
 def run(cmd: str, *, capture: bool = False,
-        ignore_error: bool = False) -> Optional[str]:
+        ignore_error: bool = False) -> str | None:
     'Run given command string'
     if ignore_error:
         cmd += ' 2>/dev/null'
