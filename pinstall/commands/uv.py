@@ -60,14 +60,18 @@ def main(args: Namespace) -> str | None:
         return f'{uv} does not exist.'
 
     if args.remove:
+        uvx = uv.with_name(uv.name + 'x')
+        if uvx.is_file():
+            uvx.unlink()
+            print(f'Removed {uvx}')
         if ver_exist:
             uv.unlink()
             print(f'Removed {uv} {ver_exist}')
             return None
         return f'{uv} does not exist.'
 
-    os.environ['CARGO_HOME'] = str(prefix)
-    run(f'curl -LsSf {URL} | sh -s -- -q --no-modify-path')
+    os.environ['UV_INSTALL_DIR'] = str(prefix)
+    run(f'curl -LsSf "{URL}" | sh -s -- -q --no-modify-path')
 
     ver = get_ver(uv)
     if not ver:
