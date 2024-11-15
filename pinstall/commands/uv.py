@@ -29,28 +29,27 @@ def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
     parser.add_argument('-r', '--remove', action='store_true',
                         help='just remove any existing uv executable')
-    parser.add_argument('-p', '--prefix',
-                        help='install to /bin under given system prefix path')
+    parser.add_argument('-b', '--bindir',
+                        help='install to bindir instead of default')
     parser.add_argument('-V', '--version', action='store_true',
                         help='just report version of installed uv executable')
 
 def main(args: Namespace) -> str | None:
     'Called to action this command'
-    # Use system prefix if root, otherwise use user prefix
-    if args.prefix:
-        prefix = Path(args.prefix)
+    # Use system bindir if root, otherwise use user bindir
+    if args.bindir:
+        bindir = Path(args.bindir)
     elif os.getuid() == 0:
-        prefix = Path('/usr')
-        bindir = prefix / 'bin'
+        bindir = Path('/', 'usr', 'bin')
         if not bindir.is_dir():
             return f'{bindir} does not exist'
     else:
-        prefix = Path('~/.local').expanduser()
+        bindir = Path('~/.local', 'bin').expanduser()
 
-    if not args.remove and not args.version:
-        prefix.mkdir(exist_ok=True, parents=True)
+        if not args.remove and not args.version:
+            bindir.mkdir(exist_ok=True, parents=True)
 
-    uv = prefix / 'bin' / 'uv'
+    uv = bindir / 'uv'
     ver_exist = get_ver(uv)
 
     if args.version:
@@ -61,7 +60,7 @@ def main(args: Namespace) -> str | None:
 
     if args.remove:
         uvx = uv.with_name(uv.name + 'x')
-        if uvx.is_file():
+        if uvx.is_symlink() or uvx.is_file():
             uvx.unlink()
             print(f'Removed {uvx}')
         if ver_exist:
@@ -70,8 +69,9 @@ def main(args: Namespace) -> str | None:
             return None
         return f'{uv} does not exist.'
 
-    os.environ['UV_INSTALL_DIR'] = str(prefix)
-    run(f'curl -LsSf "{URL}" | sh -s -- -q --no-modify-path')
+    os.environ['UV_INSTALL_DIR'] = str(bindir)
+    os.environ['UV_NO_MODIFY_PATH'] = '1'
+    run(f'curl -LsSf "{URL}" | sh -s -- -q')
 
     ver = get_ver(uv)
     if not ver:
