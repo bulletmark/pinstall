@@ -31,7 +31,7 @@ Commands:
     service             Installs systemd services and corresponding timers.
     status              Reports systemctl status of services and timers
                         installed from the current directory.
-    uv                  Installs or updates the uv tool.
+    uv                  Installs or updates the uv program.
     uvenv               Creates a Python virtual environment using uv.
     venv                Creates a Python virtual environment using venv + pip.
     version             Reports this program's version.
@@ -68,7 +68,7 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
+  -f, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"
   -o, --overwrite       overwrite existing pyproject.toml file
 ```
@@ -148,9 +148,9 @@ options:
 ### Command `uv`
 
 ```
-usage: pinstall uv [-h] [-r] [-p PREFIX] [-V]
+usage: pinstall uv [-h] [-r] [-b BINDIR] [-V]
 
-Installs or updates the uv tool.
+Installs or updates the uv program.
 
 Read about uv at https://github.com/astral-sh/uv.
 If run this as root/sudo, it installs to /usr/bin/uv otherwise it
@@ -158,11 +158,10 @@ installs as your user to $HOME/.local/bin/uv. Requires curl to be
 installed.
 
 options:
-  -h, --help            show this help message and exit
-  -r, --remove          just remove any existing uv executable
-  -p PREFIX, --prefix PREFIX
-                        install to /bin under given system prefix path
-  -V, --version         just report version of installed uv executable
+  -h, --help           show this help message and exit
+  -r, --remove         just remove any existing uv executable
+  -b, --bindir BINDIR  install to bindir instead of default
+  -V, --version        just report version of installed uv executable
 ```
 
 ### Command `uvenv`
@@ -191,14 +190,13 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -d DIR, --dir DIR     directory name to create, default=".venv"
-  -p PYTHON, --python PYTHON
-                        python executable (or venv dir), default="python3"
-  -u UV, --uv UV        path to uv executable, default="uv"
-  -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
+  -d, --dir DIR         directory name to create, default=".venv"
+  -p, --python PYTHON   python executable (or venv dir), default="python3"
+  -u, --uv UV           path to uv executable, default="uv"
+  -f, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"
   -r, --no-require      don't pip install requirements/dependencies
-  -i [PACKAGE ...], --install [PACKAGE ...]
+  -i, --install [PACKAGE ...]
                         also install (1 or more) given packages
   -R, --remove          just remove any existing venv and finish
 ```
@@ -224,14 +222,13 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -d DIR, --dir DIR     directory name to create, default=".venv"
-  -p PYTHON, --python PYTHON
-                        python executable (or venv dir), default="python3"
-  -f REQUIREMENTS_FILE, --requirements-file REQUIREMENTS_FILE
+  -d, --dir DIR         directory name to create, default=".venv"
+  -p, --python PYTHON   python executable (or venv dir), default="python3"
+  -f, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"
   -r, --no-require      don't pip install requirements/dependencies
   -u, --no-upgrade      don't upgrade pip/setuptools in venv
-  -i [PACKAGE ...], --install [PACKAGE ...]
+  -i, --install [PACKAGE ...]
                         also install (1 or more) given packages
   -w, --without-pip     don't install pip or requirements in venv (i.e. pass
                         --without-pip to python -m venv)
@@ -298,18 +295,24 @@ AUR](https://aur.archlinux.org/packages/pinstall).
 Python 3.8 or later is required and the [`sudo`](https://www.sudo.ws/)
 program must be installed (to use the `service` command).
 
-Note [pinstall is on PyPI](https://pypi.org/project/pinstall/) so just
-ensure that [`pipx`](https://pypa.github.io/pipx/) is installed then
-type the following:
+Note [pinstall is on PyPI](https://pypi.org/project/pinstall/) so the
+easiest way to install it is to use [`uv tool`][uvtool] (or
+[`pipx`][pipx] or [`pipxu`][pipxu]).
 
-```
-$ pipx install pinstall
+```sh
+$ uv tool install pinstall
 ```
 
 To upgrade:
 
+```sh
+$ uv tool upgrade pinstall
 ```
-$ pipx upgrade pinstall
+
+To uninstall:
+
+```sh
+$ uv tool uninstall pinstall
 ```
 
 ## Command Line Tab Completion
@@ -332,5 +335,9 @@ distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or
 FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License at
 <http://www.gnu.org/licenses/> for more details.
+
+[pipx]: https://github.com/pypa/pipx
+[pipxu]: https://github.com/bulletmark/pipxu
+[uvtool]: https://docs.astral.sh/uv/guides/tools/#installing-tools
 
 <!-- vim: se ai syn=markdown: -->

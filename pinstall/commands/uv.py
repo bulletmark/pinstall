@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 '''
-Installs or updates the uv tool.
+Installs or updates the uv program.
 
 Read about uv at https://github.com/astral-sh/uv.
 If run this as root/sudo, it installs to /usr/bin/uv otherwise it
