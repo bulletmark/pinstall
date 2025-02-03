@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-'''
+"""
 Creates a Python virtual environment using venv + pip.
 
 Runs `python -m venv` to create a `.venv/` (optionally for the specified
@@ -7,7 +7,8 @@ Python name, or path); adds a .gitignore to it to be automatically
 ignored by git; upgrades the venv with the latest pip + setuptools +
 wheel; then installs all package dependencies from 1) requirements.txt
 if present, or 2) from pyproject.toml if present.
-'''
+"""
+
 from __future__ import annotations
 
 import shutil
@@ -22,38 +23,75 @@ DEFDIR = '.venv'
 DEFEXE = 'python3'
 DEFREQ = 'requirements.txt'
 
+
 def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
-    parser.add_argument('-d', '--dir', default=DEFDIR,
-                        help='directory name to create, default="%(default)s"')
-    parser.add_argument('-p', '--python', default=DEFEXE,
-                        help='python executable (or venv dir), '
-                        'default="%(default)s"')
-    parser.add_argument('-f', '--requirements-file',
-                        help=f'default="{DEFREQ}"')
-    parser.add_argument('-r', '--no-require', action='store_true',
-                        help='don\'t pip install requirements/dependencies')
-    parser.add_argument('-u', '--no-upgrade', action='store_true',
-                        help='don\'t upgrade pip/setuptools in venv')
-    parser.add_argument('-i', '--install', nargs='*', metavar='PACKAGE',
-                        help='also install (1 or more) given packages')
-    parser.add_argument('-w', '--without-pip', action='store_true',
-                        help='don\'t install pip or requirements in venv '
-                        '(i.e. pass --without-pip to python -m venv)')
-    parser.add_argument('-W', '--no-wheel', action='store_true',
-                        help='don\'t install wheel in venv')
-    parser.add_argument('-R', '--remove', action='store_true',
-                        help='just remove any existing venv and finish')
-    parser.add_argument('-v', '--verbose', action='count', default=0,
-                        help='verbose pip install (can add multiple times to '
-                        'increase verbosity)')
-    parser.add_argument('args', nargs='*',
-                        help='optional arguments to python -m venv '
-                        '(add by starting with "--"). See options in '
-                        '`python -m venv -h`')
+    parser.add_argument(
+        '-d',
+        '--dir',
+        default=DEFDIR,
+        help='directory name to create, default="%(default)s"',
+    )
+    parser.add_argument(
+        '-p',
+        '--python',
+        default=DEFEXE,
+        help='python executable (or venv dir), default="%(default)s"',
+    )
+    parser.add_argument('-f', '--requirements-file', help=f'default="{DEFREQ}"')
+    parser.add_argument(
+        '-r',
+        '--no-require',
+        action='store_true',
+        help="don't pip install requirements/dependencies",
+    )
+    parser.add_argument(
+        '-u',
+        '--no-upgrade',
+        action='store_true',
+        help="don't upgrade pip/setuptools in venv",
+    )
+    parser.add_argument(
+        '-i',
+        '--install',
+        nargs='*',
+        metavar='PACKAGE',
+        help='also install (1 or more) given packages',
+    )
+    parser.add_argument(
+        '-w',
+        '--without-pip',
+        action='store_true',
+        help="don't install pip or requirements in venv "
+        '(i.e. pass --without-pip to python -m venv)',
+    )
+    parser.add_argument(
+        '-W', '--no-wheel', action='store_true', help="don't install wheel in venv"
+    )
+    parser.add_argument(
+        '-R',
+        '--remove',
+        action='store_true',
+        help='just remove any existing venv and finish',
+    )
+    parser.add_argument(
+        '-v',
+        '--verbose',
+        action='count',
+        default=0,
+        help='verbose pip install (can add multiple times to increase verbosity)',
+    )
+    parser.add_argument(
+        'args',
+        nargs='*',
+        help='optional arguments to python -m venv '
+        '(add by starting with "--"). See options in '
+        '`python -m venv -h`',
+    )
+
 
 def main(args: Namespace) -> str | None:
-    'Called to action this command'
+    "Called to action this command"
     pyexe = getpy(args.python)
     vdir = Path(args.dir)
 

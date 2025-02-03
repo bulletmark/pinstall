@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-'''
+"""
 Installs systemd services and corresponding timers.
 
 Substitutes template strings within each *.service file in the current
@@ -24,7 +24,8 @@ Template strings are specified in .service and .timer files by wrapping
 them in hash symbols. Installed copies of these source files have all
 instances of template strings replaced by their value. E.g. #HOME#
 gets replaced by the user's home directory path.
-'''
+"""
+
 from __future__ import annotations
 
 import getpass
@@ -36,21 +37,29 @@ from pwd import getpwnam
 
 from ..run import run
 
+
 def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
-    parser.add_argument('-u', '--user', action='store_true',
-                        help='install as user service')
-    parser.add_argument('-s', '--no-start', action='store_true',
-                        help='do not start service[s]')
-    parser.add_argument('-e', '--no-enable', action='store_true',
-                        help='do not enable service[s]')
-    parser.add_argument('-r', '--remove', action='store_true',
-                        help='just uninstall and remove service[s]')
-    parser.add_argument('units', nargs='*',
-                        help='systemd service file[s]')
+    parser.add_argument(
+        '-u', '--user', action='store_true', help='install as user service'
+    )
+    parser.add_argument(
+        '-s', '--no-start', action='store_true', help='do not start service[s]'
+    )
+    parser.add_argument(
+        '-e', '--no-enable', action='store_true', help='do not enable service[s]'
+    )
+    parser.add_argument(
+        '-r',
+        '--remove',
+        action='store_true',
+        help='just uninstall and remove service[s]',
+    )
+    parser.add_argument('units', nargs='*', help='systemd service file[s]')
+
 
 def remove_unit(args: Namespace, unit: Path) -> bool:
-    'Remove given unit file'
+    "Remove given unit file"
     if not unit.exists():
         return False
 
@@ -66,16 +75,19 @@ def remove_unit(args: Namespace, unit: Path) -> bool:
             try:
                 unit.parent.rmdir()
             except Exception:
-                print(f'### Warning: failed to remove {unit} directory',
-                      file=sys.stderr)
+                print(
+                    f'### Warning: failed to remove {unit} directory', file=sys.stderr
+                )
             else:
                 print(f'### {unit} directory removed')
 
     return True
 
-def create_unit(args: Namespace, templdata: dict[str, str], sysdpath: Path,
-                unit: Path) -> bool:
-    'Create given unit file'
+
+def create_unit(
+    args: Namespace, templdata: dict[str, str], sysdpath: Path, unit: Path
+) -> bool:
+    "Create given unit file"
     target = sysdpath / unit.name
     print(f'### Creating unit file {target}')
     templdata['PROG'] = unit.stem
@@ -89,8 +101,9 @@ def create_unit(args: Namespace, templdata: dict[str, str], sysdpath: Path,
 
     # If installing as user then must remove User line
     if args.user:
-        content = '\n'.join(ln for ln in content.splitlines()
-                           if not ln.startswith('User='))
+        content = '\n'.join(
+            ln for ln in content.splitlines() if not ln.startswith('User=')
+        )
 
     if not target.exists():
         print(f'### {target} has been installed')
@@ -104,8 +117,9 @@ def create_unit(args: Namespace, templdata: dict[str, str], sysdpath: Path,
 
     return True
 
+
 def main(args: Namespace) -> str | None:
-    'Called to action this command'
+    "Called to action this command"
     userid = os.getuid()
     if not args.user:
         # Not user mode so if not yet running as root then re-invoke
@@ -124,8 +138,11 @@ def main(args: Namespace) -> str | None:
         cdir = os.getenv('XDG_CONFIG_HOME', '~/.config')
         sysdpath = Path(cdir).expanduser() / 'systemd' / 'user'
 
-    units = [Path(p) for p in args.units] \
-            if args.units else list(Path.cwd().glob('*.service'))
+    units = (
+        [Path(p) for p in args.units]
+        if args.units
+        else list(Path.cwd().glob('*.service'))
+    )
 
     if not units:
         return 'There are no .service files in this directory'
@@ -154,8 +171,7 @@ def main(args: Namespace) -> str | None:
         if args.remove:
             for ext in ('.timer', '.socket', '.service'):
                 name = unit.stem + ext
-                run(f'{sysctl} disable --now {name}', capture=True,
-                    ignore_error=True)
+                run(f'{sysctl} disable --now {name}', capture=True, ignore_error=True)
                 if remove_unit(args, sysdpath / name):
                     change = True
             continue

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-'''
+"""
 Creates a bare-bones Python pyproject.toml file to facilitate
 installation by pipx or pip.
 
@@ -15,7 +15,8 @@ file.
 
 Your app.py must have a main() function to be called when the app is
 run.
-'''
+"""
+
 from __future__ import annotations
 
 import datetime
@@ -28,7 +29,7 @@ DEFREQ = 'requirements.txt'
 PYTOML = 'pyproject.toml'
 
 # Template for pyproject.toml
-template = '''\
+template = """\
 # DO NOT EDIT. This file was built by "$prog" on $date.
 [build-system]
 requires = ["setuptools>=61.0"]
@@ -48,10 +49,11 @@ name = "$user"
 
 [project.scripts]
 "$name" = "$pyname:main"
-'''
+"""
+
 
 def parse_script_tag(file: Path) -> list[str]:
-    'Parses PEP723 dependencies from a script tag in a Python file'
+    "Parses PEP723 dependencies from a script tag in a Python file"
     have_script = False
     have_depends = False
     have_end = False
@@ -77,19 +79,27 @@ def parse_script_tag(file: Path) -> list[str]:
                 depends.append(line.lstrip('"').rstrip('",'))
     return depends if have_end else []
 
+
 def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
-    parser.add_argument('-f', '--requirements-file',
-                        help=f'default="{DEFREQ}"')
-    parser.add_argument('-o', '--overwrite', action='store_true',
-                        help=f'overwrite existing {PYTOML} file')
-    parser.add_argument('app', nargs='?',
-                        help='app[.py] or app/ package to '
-                        f'create {PYTOML} for. If not specified then '
-                        'looks for a single .py file in current directory.')
+    parser.add_argument('-f', '--requirements-file', help=f'default="{DEFREQ}"')
+    parser.add_argument(
+        '-o',
+        '--overwrite',
+        action='store_true',
+        help=f'overwrite existing {PYTOML} file',
+    )
+    parser.add_argument(
+        'app',
+        nargs='?',
+        help='app[.py] or app/ package to '
+        f'create {PYTOML} for. If not specified then '
+        'looks for a single .py file in current directory.',
+    )
+
 
 def main(args: Namespace) -> str | None:
-    'Called to action this command'
+    "Called to action this command"
     global template
 
     pytoml = Path(PYTOML)
@@ -132,8 +142,7 @@ def main(args: Namespace) -> str | None:
 
     if file.is_dir():
         if file.suffix == '.py':
-            return f'Error: "{file}" is a directory so can '\
-                    'not have a .py extension.'
+            return f'Error: "{file}" is a directory so can not have a .py extension.'
 
         file = (file / filestem).with_suffix('.py')
         pyname = f'{filestem}.{filestem}'
@@ -145,8 +154,11 @@ def main(args: Namespace) -> str | None:
         return f'Error: "{file}" does not exist.'
 
     if reqfile:
-        dynamics = [ln for line in reqfile.read_text().splitlines() if
-                    (ln := line.strip()) and not ln.startswith('#')]
+        dynamics = [
+            ln
+            for line in reqfile.read_text().splitlines()
+            if (ln := line.strip()) and not ln.startswith('#')
+        ]
     else:
         dynamics = parse_script_tag(file)
 

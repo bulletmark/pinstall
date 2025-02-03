@@ -8,8 +8,9 @@ from typing import Any
 
 PYPROJ = 'pyproject.toml'
 
+
 def _get_pyproj_reqs() -> Any:
-    'Return a requirements file built from dependencies in PYPROJ if it exists'
+    "Return a requirements file built from dependencies in PYPROJ if it exists"
     pyproj = Path(PYPROJ)
     if not pyproj.exists():
         return None
@@ -26,17 +27,18 @@ def _get_pyproj_reqs() -> Any:
     if not dependencies:
         return None
 
-    tmpfile = tempfile.NamedTemporaryFile(prefix=f'{pyproj.stem}.',
-                                          suffix='.txt')
+    tmpfile = tempfile.NamedTemporaryFile(prefix=f'{pyproj.stem}.', suffix='.txt')
     tmpfile.writelines(line.encode() + b'\n' for line in dependencies)
     tmpfile.flush()
     return tmpfile
 
+
 # Keep ths file pointer to prevent it from being deleted
 _reqfp = None
 
+
 def get_requirements(reqname: str, reqname_def: str) -> str | Path:
-    'Return the requirements file path, or error message'
+    "Return the requirements file path, or error message"
     global _reqfp
 
     if reqname:

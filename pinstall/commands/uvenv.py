@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-'''
+"""
 Creates a Python virtual environment using uv.
 
 Runs `uv venv` to create a `.venv/` (optionally for the specified Python
@@ -12,7 +12,8 @@ which is more efficient and **much** faster than `python -m venv` and
 and it will work similarly. At the moment the `uvenv` command is
 experimental but if the `uv` tool succeeds, `uvenv` will likely replace
 `venv`.
-'''
+"""
+
 from __future__ import annotations
 
 import shutil
@@ -20,38 +21,61 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
 from ..getpy import getpy
-from ..run import run
 from ..pyproj import get_requirements
+from ..run import run
 
 DEFDIR = '.venv'
 DEFEXE = 'python3'
 DEFUV = 'uv'
 DEFREQ = 'requirements.txt'
 
+
 def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
-    parser.add_argument('-d', '--dir', default=DEFDIR,
-                        help='directory name to create, default="%(default)s"')
-    parser.add_argument('-p', '--python', default=DEFEXE,
-                        help='python executable (or venv dir), '
-                        'default="%(default)s"')
-    parser.add_argument('-u', '--uv',
-                        help=f'path to uv executable, default="{DEFUV}"')
-    parser.add_argument('-f', '--requirements-file',
-                        help=f'default="{DEFREQ}"')
-    parser.add_argument('-r', '--no-require', action='store_true',
-                        help='don\'t pip install requirements/dependencies')
-    parser.add_argument('-i', '--install', nargs='*', metavar='PACKAGE',
-                        help='also install (1 or more) given packages')
-    parser.add_argument('-R', '--remove', action='store_true',
-                        help='just remove any existing venv and finish')
-    parser.add_argument('args', nargs='*',
-                        help='optional arguments to `uv venv` command'
-                        '(add by starting with "--"). See options in '
-                        '`uv venv -h`')
+    parser.add_argument(
+        '-d',
+        '--dir',
+        default=DEFDIR,
+        help='directory name to create, default="%(default)s"',
+    )
+    parser.add_argument(
+        '-p',
+        '--python',
+        default=DEFEXE,
+        help='python executable (or venv dir), default="%(default)s"',
+    )
+    parser.add_argument('-u', '--uv', help=f'path to uv executable, default="{DEFUV}"')
+    parser.add_argument('-f', '--requirements-file', help=f'default="{DEFREQ}"')
+    parser.add_argument(
+        '-r',
+        '--no-require',
+        action='store_true',
+        help="don't pip install requirements/dependencies",
+    )
+    parser.add_argument(
+        '-i',
+        '--install',
+        nargs='*',
+        metavar='PACKAGE',
+        help='also install (1 or more) given packages',
+    )
+    parser.add_argument(
+        '-R',
+        '--remove',
+        action='store_true',
+        help='just remove any existing venv and finish',
+    )
+    parser.add_argument(
+        'args',
+        nargs='*',
+        help='optional arguments to `uv venv` command'
+        '(add by starting with "--"). See options in '
+        '`uv venv -h`',
+    )
+
 
 def main(args: Namespace) -> str | None:
-    'Called to action this command'
+    "Called to action this command"
     pyexe = getpy(args.python)
     vdir = Path(args.dir)
 
@@ -69,8 +93,10 @@ def main(args: Namespace) -> str | None:
         if args.uv:
             return f'Error: uv program not found at "{uv}"'
 
-        return f'Error: {uv} program must be installed, and in your PATH '\
-                'or specified with --uv option.'
+        return (
+            f'Error: {uv} program must be installed, and in your PATH '
+            'or specified with --uv option.'
+        )
 
     if vdir.exists():
         print(f'### Removing existing {vdir}/ ..')

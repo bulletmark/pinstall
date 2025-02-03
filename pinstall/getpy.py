@@ -4,6 +4,7 @@ from __future__ import annotations
 import platform
 from pathlib import Path
 
+
 def getpy(pyfile: str | None) -> str | None:
     if not pyfile:
         return None

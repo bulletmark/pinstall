@@ -1,12 +1,13 @@
 #!/usr/bin/python3
-'''
+"""
 Installs or updates the uv program.
 
 Read about uv at https://github.com/astral-sh/uv.
 If run this as root/sudo, it installs to /usr/bin/uv otherwise it
 installs as your user to $HOME/.local/bin/uv. Requires curl to be
 installed.
-'''
+"""
+
 from __future__ import annotations
 
 import os
@@ -17,25 +18,35 @@ from ..run import run
 
 URL = 'https://astral.sh/uv/install.sh'
 
+
 def get_ver(uv: Path) -> str | None:
-    'Run the specified uv to return the version'
+    "Run the specified uv to return the version"
     if uv.is_file():
         out = run(f'{uv} --version', capture=True)
         return out.split()[1] if out else None
 
     return None
 
+
 def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
-    parser.add_argument('-r', '--remove', action='store_true',
-                        help='just remove any existing uv executable')
-    parser.add_argument('-b', '--bindir',
-                        help='install to bindir instead of default')
-    parser.add_argument('-V', '--version', action='store_true',
-                        help='just report version of installed uv executable')
+    parser.add_argument(
+        '-r',
+        '--remove',
+        action='store_true',
+        help='just remove any existing uv executable',
+    )
+    parser.add_argument('-b', '--bindir', help='install to bindir instead of default')
+    parser.add_argument(
+        '-V',
+        '--version',
+        action='store_true',
+        help='just report version of installed uv executable',
+    )
+
 
 def main(args: Namespace) -> str | None:
-    'Called to action this command'
+    "Called to action this command"
     # Use system bindir if root, otherwise use user bindir
     if args.bindir:
         bindir = Path(args.bindir)

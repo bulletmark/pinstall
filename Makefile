@@ -1,22 +1,26 @@
 NAME = $(shell basename $(CURDIR))
 PYNAME = $(subst -,_,$(NAME))
+PYFILES = $(NAME)/*.py $(NAME)/*/*.py
 
 check:
-	ruff check $(NAME)/*.py $(NAME)/*/*.py
-	mypy $(NAME)/*.py $(NAME)/*/*.py
-	pyright $(NAME)/*.py $(NAME)/*/*.py
+	ruff check $(PYFILES)
+	mypy $(PYFILES)
+	pyright $(PYFILES)
 	vermin -vv --exclude importlib.metadata --exclude tomllib \
-		--no-tips -i $(NAME)/*.py $(NAME)/*/*.py
+		--no-tips -i $(PYFILES)
 
 upload: build
 	twine3 upload dist/*
 
 build:
 	rm -rf dist
-	python3 -m build
+	python3 -m build --sdist --wheel
 
 doc:
 	update-readme-usage
+
+format:
+	ruff check --select I --fix $(PYFILES) && ruff format $(PYFILES)
 
 clean:
 	@rm -vrf *.egg-info build/ dist/ __pycache__/ \

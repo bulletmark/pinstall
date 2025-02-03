@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-'Updates all pyenv python versions and creates links to current major versions.'
+"Updates all pyenv python versions and creates links to current major versions."
+
 from __future__ import annotations
 
 import os
@@ -14,9 +15,9 @@ from ..run import run
 
 valids = set(string.digits + '.')
 
-def update_symlinks(*, remove_symlinks: bool = False,
-                    verbose: bool = False) -> None:
-    'Update all symlinks in pyenv versions dir'
+
+def update_symlinks(*, remove_symlinks: bool = False, verbose: bool = False) -> None:
+    "Update all symlinks in pyenv versions dir"
     basestr = run('pyenv root', capture=True)
     if not basestr:
         return None
@@ -52,8 +53,7 @@ def update_symlinks(*, remove_symlinks: bool = False,
             newlinks_all[namevers_major].append(namevers)
             namevers = namevers_major
 
-    newlinks = {k: sorted(v, key=version.parse)[-1] for k, v in
-                newlinks_all.items()}
+    newlinks = {k: sorted(v, key=version.parse)[-1] for k, v in newlinks_all.items()}
 
     # Remove all old or invalid existing links
     for name, tgt in oldlinks.items():
@@ -73,22 +73,37 @@ def update_symlinks(*, remove_symlinks: bool = False,
                 print(f'Adding new link {path} -> {tgt}')
             path.symlink_to(tgt, target_is_directory=True)
 
+
 def init(parser: ArgumentParser) -> None:
     "Called to add this command's arguments to parser at init"
-    parser.add_argument('-l', '--list', action='store_true',
-                     help='just list latest versions, do not update or purge')
-    parser.add_argument('-p', '--purge', action='store_true',
-                     help='just purge old versions if later is installed')
-    parser.add_argument('-m', '--remove-major-symlinks', action='store_true',
-                     help='remove all symlinks to major versions')
+    parser.add_argument(
+        '-l',
+        '--list',
+        action='store_true',
+        help='just list latest versions, do not update or purge',
+    )
+    parser.add_argument(
+        '-p',
+        '--purge',
+        action='store_true',
+        help='just purge old versions if later is installed',
+    )
+    parser.add_argument(
+        '-m',
+        '--remove-major-symlinks',
+        action='store_true',
+        help='remove all symlinks to major versions',
+    )
+
 
 def main(args: Namespace) -> str | None:
-    'Called to action this command'
+    "Called to action this command"
     vstr = run('pyenv versions', capture=True)
     if not vstr:
         return None
-    versions = [ln.strip() for ln in vstr.splitlines()
-                if ' system' not in ln and '->' not in ln]
+    versions = [
+        ln.strip() for ln in vstr.splitlines() if ' system' not in ln and '->' not in ln
+    ]
     outdates = []
     updates = []
     latest = None
@@ -123,6 +138,5 @@ def main(args: Namespace) -> str | None:
 
     # Ensure we always update all the major version symlinks
     if not args.list:
-        update_symlinks(remove_symlinks=args.remove_major_symlinks,
-                        verbose=True)
+        update_symlinks(remove_symlinks=args.remove_major_symlinks, verbose=True)
     return None
