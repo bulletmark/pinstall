@@ -1,6 +1,6 @@
 NAME = $(shell basename $(CURDIR))
 PYNAME = $(subst -,_,$(NAME))
-PYFILES = $(NAME)/*.py $(NAME)/*/*.py
+PYFILES = $(PYNAME)/*.py $(PYNAME)/*/*.py
 
 check:
 	ruff check $(PYFILES)
