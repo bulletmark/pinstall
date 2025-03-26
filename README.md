@@ -15,7 +15,7 @@ Type `pinstall` or `pinstall -h` to view the usage summary:
 
 ```
 usage: pinstall [-h]
-                   {project,pyenv,service,status,uv,uvenv,venv,version} ...
+                   {project,pyenv,service,status,uv,venv-legacy,venv,version} ...
 
 Installer/utility tool for Python programs.
 
@@ -23,7 +23,7 @@ options:
   -h, --help            show this help message and exit
 
 Commands:
-  {project,pyenv,service,status,uv,uvenv,venv,version}
+  {project,pyenv,service,status,uv,venv-legacy,venv,version}
     project             Creates a bare-bones Python pyproject.toml file to
                         facilitate installation by pipx or pip.
     pyenv               Updates all pyenv python versions and creates links to
@@ -32,8 +32,9 @@ Commands:
     status              Reports systemctl status of services and timers
                         installed from the current directory.
     uv                  Installs or updates the uv program.
-    uvenv               Creates a Python virtual environment using uv.
-    venv                Creates a Python virtual environment using venv + pip.
+    venv-legacy         Creates a Python virtual environment using legacy venv
+                        + pip.
+    venv                Creates a Python virtual environment using uv.
     version             Reports this program's version.
 ```
 
@@ -164,51 +165,15 @@ options:
   -V, --version        just report version of installed uv executable
 ```
 
-### Command `uvenv`
+### Command `venv-legacy`
 
 ```
-usage: pinstall uvenv [-h] [-d DIR] [-p PYTHON] [-u UV]
-                         [-f REQUIREMENTS_FILE] [-r] [-i [PACKAGE ...]] [-R]
-                         [args ...]
+usage: pinstall venv-legacy [-h] [-d DIR] [-p PYTHON]
+                               [-f REQUIREMENTS_FILE] [-r] [-u]
+                               [-i [PACKAGE ...]] [-w] [-W] [-R] [-v]
+                               [args ...]
 
-Creates a Python virtual environment using uv.
-
-Runs `uv venv` to create a `.venv/` (optionally for the specified Python
-name, or path) then installs all package dependencies from 1)
-requirements.txt if present, or 2) from pyproject.toml if present.
-
-[uv](https://github.com/astral-sh/uv) is a new Python installation tool
-which is more efficient and **much** faster than `python -m venv` and
-`pip`. You can use the `uvenv` command pretty much in place of `venv`
-and it will work similarly. At the moment the `uvenv` command is
-experimental but if the `uv` tool succeeds, `uvenv` will likely replace
-`venv`.
-
-positional arguments:
-  args                  optional arguments to `uv venv` command(add by
-                        starting with "--"). See options in `uv venv -h`
-
-options:
-  -h, --help            show this help message and exit
-  -d, --dir DIR         directory name to create, default=".venv"
-  -p, --python PYTHON   python executable (or venv dir), default="python3"
-  -u, --uv UV           path to uv executable, default="uv"
-  -f, --requirements-file REQUIREMENTS_FILE
-                        default="requirements.txt"
-  -r, --no-require      don't pip install requirements/dependencies
-  -i, --install [PACKAGE ...]
-                        also install (1 or more) given packages
-  -R, --remove          just remove any existing venv and finish
-```
-
-### Command `venv`
-
-```
-usage: pinstall venv [-h] [-d DIR] [-p PYTHON] [-f REQUIREMENTS_FILE] [-r]
-                        [-u] [-i [PACKAGE ...]] [-w] [-W] [-R] [-v]
-                        [args ...]
-
-Creates a Python virtual environment using venv + pip.
+Creates a Python virtual environment using legacy venv + pip.
 
 Runs `python -m venv` to create a `.venv/` (optionally for the specified
 Python name, or path); adds a .gitignore to it to be automatically
@@ -236,6 +201,41 @@ options:
   -R, --remove          just remove any existing venv and finish
   -v, --verbose         verbose pip install (can add multiple times to
                         increase verbosity)
+```
+
+### Command `venv`
+
+```
+usage: pinstall venv [-h] [-d DIR] [-p PYTHON] [-u UV]
+                        [-f REQUIREMENTS_FILE] [-r] [-i [PACKAGE ...]] [-R]
+                        [args ...]
+
+Creates a Python virtual environment using uv.
+
+Runs `uv venv` to create a `.venv/` (optionally for the specified Python
+name, or path) then installs all package dependencies from 1)
+requirements.txt if present, or 2) from pyproject.toml if present.
+
+[uv](https://github.com/astral-sh/uv) is a new Python installation tool
+which is more efficient and **much** faster than `python -m venv` and
+`pip`. You can use the `venv` command pretty much in place of `venv-legacy`
+and it will work similarly.
+
+positional arguments:
+  args                  optional arguments to `uv venv` command(add by
+                        starting with "--"). See options in `uv venv -h`
+
+options:
+  -h, --help            show this help message and exit
+  -d, --dir DIR         directory name to create, default=".venv"
+  -p, --python PYTHON   python executable (or venv dir), default="python3"
+  -u, --uv UV           path to uv executable, default="uv"
+  -f, --requirements-file REQUIREMENTS_FILE
+                        default="requirements.txt"
+  -r, --no-require      don't pip install requirements/dependencies
+  -i, --install [PACKAGE ...]
+                        also install (1 or more) given packages
+  -R, --remove          just remove any existing venv and finish
 ```
 
 ### Command `version`
@@ -277,15 +277,6 @@ virtual environment in either of two ways:
    and install a new 3.7.5). Note that python minor (i.e. maintenance)
    version updates are [always backwards
    compatible](https://devguide.python.org/developer-workflow/development-cycle/index.html#maintenance-branches).
-
-## Experimental command `uvenv`
-
-[uv](https://github.com/astral-sh/uv) is a new Python installation tool
-which is more efficient and **much** faster than `python -m venv` and
-`pip`. You can use the `uvenv` command pretty much in place of `venv`
-and it will work similarly. At the moment the `uvenv` command is
-experimental but if the `uv` tool succeeds, `uvenv` will likely replace
-`venv`.
 
 ## Installation
 

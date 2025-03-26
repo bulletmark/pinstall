@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 """
-Creates a Python virtual environment using venv + pip.
+Creates a Python virtual environment using uv.
 
-Runs `python -m venv` to create a `.venv/` (optionally for the specified
-Python name, or path); adds a .gitignore to it to be automatically
-ignored by git; upgrades the venv with the latest pip + setuptools +
-wheel; then installs all package dependencies from 1) requirements.txt
-if present, or 2) from pyproject.toml if present.
+Runs `uv venv` to create a `.venv/` (optionally for the specified Python
+name, or path) then installs all package dependencies from 1)
+requirements.txt if present, or 2) from pyproject.toml if present.
+
+[uv](https://github.com/astral-sh/uv) is a new Python installation tool
+which is more efficient and **much** faster than `python -m venv` and
+`pip`. You can use the `venv` command pretty much in place of `venv-legacy`
+and it will work similarly.
 """
 
 from __future__ import annotations
@@ -21,6 +24,7 @@ from ..run import run
 
 DEFDIR = '.venv'
 DEFEXE = 'python3'
+DEFUV = 'uv'
 DEFREQ = 'requirements.txt'
 
 
@@ -38,18 +42,13 @@ def init(parser: ArgumentParser) -> None:
         default=DEFEXE,
         help='python executable (or venv dir), default="%(default)s"',
     )
+    parser.add_argument('-u', '--uv', help=f'path to uv executable, default="{DEFUV}"')
     parser.add_argument('-f', '--requirements-file', help=f'default="{DEFREQ}"')
     parser.add_argument(
         '-r',
         '--no-require',
         action='store_true',
         help="don't pip install requirements/dependencies",
-    )
-    parser.add_argument(
-        '-u',
-        '--no-upgrade',
-        action='store_true',
-        help="don't upgrade pip/setuptools in venv",
     )
     parser.add_argument(
         '-i',
@@ -59,34 +58,17 @@ def init(parser: ArgumentParser) -> None:
         help='also install (1 or more) given packages',
     )
     parser.add_argument(
-        '-w',
-        '--without-pip',
-        action='store_true',
-        help="don't install pip or requirements in venv "
-        '(i.e. pass --without-pip to python -m venv)',
-    )
-    parser.add_argument(
-        '-W', '--no-wheel', action='store_true', help="don't install wheel in venv"
-    )
-    parser.add_argument(
         '-R',
         '--remove',
         action='store_true',
         help='just remove any existing venv and finish',
     )
     parser.add_argument(
-        '-v',
-        '--verbose',
-        action='count',
-        default=0,
-        help='verbose pip install (can add multiple times to increase verbosity)',
-    )
-    parser.add_argument(
         'args',
         nargs='*',
-        help='optional arguments to python -m venv '
+        help='optional arguments to `uv venv` command'
         '(add by starting with "--"). See options in '
-        '`python -m venv -h`',
+        '`uv venv -h`',
     )
 
 
@@ -102,48 +84,38 @@ def main(args: Namespace) -> str | None:
             return None
         return f'{vdir}/ does not exist'
 
-    if '--upgrade' not in args.args and vdir.exists():
+    # Ensure uv is installed/available
+    uv = args.uv or DEFUV
+    version = run(f'{uv} --version', capture=True, ignore_error=True)
+    if not version:
+        if args.uv:
+            return f'Error: uv program not found at "{uv}"'
+
+        return (
+            f'Error: {uv} program must be installed, and in your PATH '
+            'or specified with --uv option.'
+        )
+
+    if vdir.exists():
         print(f'### Removing existing {vdir}/ ..')
         shutil.rmtree(vdir)
 
-    if args.without_pip and '--without-pip' not in args.args:
-        args.args.append('--without-pip')
-
     # Create the venv ..
-    opts = ' ' + ' '.join(args.args)
-    run(f'{pyexe} -m venv{opts.rstrip()} {vdir}')
+    opts = f'-p {pyexe} ' + ' '.join(args.args)
+    run(f'{uv} venv {opts.rstrip()} {vdir}')
     if not vdir.exists():
         return None
 
-    # Python 3.13+ may create a .gitignore for us, but if not, create one ..
-    gitignore = vdir / '.gitignore'
-    if not gitignore.exists():
-        gitignore.write_text(f'# Automatically created by {args._prog}\n*\n')
-
-    # Next do all pip installs ..
-    if '--without-pip' in args.args:
-        return None
-
-    pip = str(vdir / 'bin/pip')
-    if args.verbose > 0:
-        pip += ' -' + 'v' * args.verbose
-
-    if not args.no_upgrade and '--upgrade-deps' not in args.args:
-        run(f'{pip} --disable-pip-version-check install -U pip')
-        run(f'{pip} install -U setuptools')
-
-    if not args.no_wheel:
-        run(f'{pip} install -U wheel')
-
+    vdir = vdir.resolve()
     if not args.no_require:
         reqfile = get_requirements(args.requirements_file, DEFREQ)
         if reqfile:
             if isinstance(reqfile, str):
                 return reqfile
-            run(f'{pip} install -U -r "{reqfile}"')
+            run(f'{uv} pip install -p {vdir} -r "{reqfile}"')
 
     if args.install:
         pkgs = ' '.join(args.install)
-        run(f'{pip} install -U {pkgs}')
+        run(f'{uv} pip install -p {vdir} {pkgs}')
 
     return None
