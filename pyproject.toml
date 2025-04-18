@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "pinstall"
 description = "Installer Tool for Python Programs"
 readme = "README.md"
+license = "GPL-3.0-or-later"
 requires-python = ">=3.8"
 keywords = ["venv", "virtualenv", "systemd", "service", "pip", "pipx",
 	 "pyproject.toml"]
@@ -29,9 +30,6 @@ Homepage = "https://github.com/bulletmark/pinstall"
 
 [project.scripts]
 pinstall = "pinstall.pinstall:main"
-
-[project.license]
-text = "GPLv3"
 
 [tool.setuptools_scm]
 version_scheme = "post-release"
