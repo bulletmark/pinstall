@@ -206,7 +206,7 @@ options:
 ### Command `venv`
 
 ```
-usage: pinstall venv [-h] [-d DIR] [-p PYTHON] [-u UV]
+usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYSTAND_PYTHON] [-u UV]
                         [-f REQUIREMENTS_FILE] [-r] [-i [PACKAGE ...]] [-R]
                         [args ...]
 
@@ -229,6 +229,8 @@ options:
   -h, --help            show this help message and exit
   -d, --dir DIR         directory name to create, default=".venv"
   -p, --python PYTHON   python executable (or venv dir), default="python3"
+  -P, --pystand-python PYSTAND_PYTHON
+                        Run with given pystand version of python
   -u, --uv UV           path to uv executable, default="uv"
   -f, --requirements-file REQUIREMENTS_FILE
                         default="requirements.txt"

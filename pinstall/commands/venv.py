@@ -15,6 +15,7 @@ and it will work similarly.
 from __future__ import annotations
 
 import shutil
+import sys
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
@@ -36,12 +37,14 @@ def init(parser: ArgumentParser) -> None:
         default=DEFDIR,
         help='directory name to create, default="%(default)s"',
     )
-    parser.add_argument(
+    grp = parser.add_mutually_exclusive_group()
+    grp.add_argument(
         '-p',
         '--python',
         default=DEFEXE,
         help='python executable (or venv dir), default="%(default)s"',
     )
+    grp.add_argument('-P', '--pystand-python', help='Run with given pystand version of python')
     parser.add_argument('-u', '--uv', help=f'path to uv executable, default="{DEFUV}"')
     parser.add_argument('-f', '--requirements-file', help=f'default="{DEFREQ}"')
     parser.add_argument(
@@ -74,7 +77,12 @@ def init(parser: ArgumentParser) -> None:
 
 def main(args: Namespace) -> str | None:
     "Called to action this command"
-    pyexe = getpy(args.python)
+    if args.pystand_python:
+        if not (pyexe := run(f'pystand path {args.pystand_python}', capture=True)):
+            sys.exit(1)
+    else:
+        pyexe = getpy(args.python)
+
     vdir = Path(args.dir)
 
     if args.remove:

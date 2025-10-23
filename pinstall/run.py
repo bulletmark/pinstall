@@ -19,7 +19,7 @@ def run(cmd: str, *, capture: bool = False, ignore_error: bool = False) -> str |
         print(f'>>> Running {cmd}')
 
     try:
-        res = subprocess.run(cmd, shell=True, stdout=stdout, universal_newlines=True)
+        res = subprocess.run(cmd, shell=True, stdout=stdout, text=True)
     except Exception as e:
         if not capture and not ignore_error:
             sys.exit(str(e))

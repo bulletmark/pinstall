@@ -8,6 +8,7 @@ check:
 	pyright $(PYFILES)
 	vermin -vv --exclude importlib.metadata --exclude tomllib \
 		--no-tips -i $(PYFILES)
+	md-link-checker
 
 upload: build
 	uv-publish
