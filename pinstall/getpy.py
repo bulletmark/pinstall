@@ -13,5 +13,7 @@ def getpy(pyfile: str | None) -> str | None:
     if not pypath.is_dir():
         return pyfile
 
-    binpath = 'Scripts' if platform.system() == 'Windows' else 'bin'
-    return str(pypath / binpath / 'python')
+    if platform.system() == 'Windows':
+        return str(pypath / 'Scripts' / 'python.exe')
+
+    return str(pypath / 'bin' / 'python')
