@@ -44,7 +44,9 @@ def init(parser: ArgumentParser) -> None:
         default=DEFEXE,
         help='python executable (or venv dir), default="%(default)s"',
     )
-    grp.add_argument('-P', '--pystand-python', help='Run with given pystand version of python')
+    grp.add_argument(
+        '-P', '--pystand-python', help='Run with given pystand version of python'
+    )
     parser.add_argument('-u', '--uv', help=f'path to uv executable, default="{DEFUV}"')
     parser.add_argument('-f', '--requirements-file', help=f'default="{DEFREQ}"')
     parser.add_argument(

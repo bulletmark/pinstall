@@ -35,6 +35,8 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from pwd import getpwnam
 
+import platformdirs
+
 from ..run import run
 
 
@@ -135,8 +137,7 @@ def main(args: Namespace) -> str | None:
         sysdpath = Path('/etc/systemd/system')
     else:
         user = getpass.getuser()
-        cdir = os.getenv('XDG_CONFIG_HOME', '~/.config')
-        sysdpath = Path(cdir).expanduser() / 'systemd' / 'user'
+        sysdpath = platformdirs.user_config_path() / 'systemd' / 'user'
 
     units = (
         [Path(p) for p in args.units]
