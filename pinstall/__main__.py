@@ -1,6 +1,6 @@
 from sys import exit
 
-from . import pinstall
+from . import main
 
 if __name__ == '__main__':
-    exit(pinstall.main())
+    exit(main.main())

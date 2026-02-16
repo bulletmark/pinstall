@@ -30,7 +30,7 @@ email = "mark.blakeney@bullet-systems.net"
 Homepage = "https://github.com/bulletmark/pinstall"
 
 [project.scripts]
-pinstall = "pinstall.pinstall:main"
+pinstall = "pinstall.main:main"
 
 [tool.setuptools_scm]
 version_scheme = "post-release"

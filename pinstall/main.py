@@ -12,6 +12,8 @@ from pathlib import Path
 
 import argcomplete
 
+PROG = Path(__file__).parent
+
 
 def main() -> str | None:
     "Main code"
@@ -20,10 +22,9 @@ def main() -> str | None:
 
     # Iterate over the commands to set up their parsers
     progs = {}
-    prog = Path(__file__)
-    for modfile in sorted((prog.parent / 'commands').glob('[!_]*.py')):
+    for modfile in sorted((PROG / 'commands').glob('[!_]*.py')):
         name = modfile.stem
-        mod = importlib.import_module(f'{prog.stem}.commands.{name}')
+        mod = importlib.import_module(f'{PROG.stem}.commands.{name}')
         docstr = mod.__doc__.strip().split('\n\n')[0] if mod.__doc__ else None
         parser = subparser.add_parser(
             name,
