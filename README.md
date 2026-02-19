@@ -15,7 +15,7 @@ Type `pinstall` or `pinstall -h` to view the usage summary:
 
 ```
 usage: pinstall [-h]
-                   {project,pyenv,service,status,uv,venv-legacy,venv,version} ...
+                           {project,pyenv,service,status,uv,venv-legacy,venv,version} ...
 
 Installer/utility tool for Python programs.
 
@@ -169,9 +169,9 @@ options:
 
 ```
 usage: pinstall venv-legacy [-h] [-d DIR] [-p PYTHON]
-                               [-f REQUIREMENTS_FILE] [-r] [-u]
-                               [-i [PACKAGE ...]] [-w] [-W] [-R] [-v]
-                               [args ...]
+                                       [-f REQUIREMENTS_FILE] [-r] [-u]
+                                       [-i [PACKAGE ...]] [-w] [-W] [-R] [-v]
+                                       [args ...]
 
 Creates a Python virtual environment using legacy venv + pip.
 
@@ -206,9 +206,10 @@ options:
 ### Command `venv`
 
 ```
-usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYSTAND_PYTHON] [-u UV]
-                        [-f REQUIREMENTS_FILE] [-r] [-i [PACKAGE ...]] [-R]
-                        [args ...]
+usage: pinstall venv [-h] [-d DIR] [-p PYTHON | -P PYSTAND_PYTHON]
+                                [-u UV] [-f REQUIREMENTS_FILE] [-r]
+                                [-i [PACKAGE ...]] [-R]
+                                [args ...]
 
 Creates a Python virtual environment using uv.
 
@@ -307,15 +308,6 @@ To uninstall:
 ```sh
 $ uv tool uninstall pinstall
 ```
-
-## Command Line Tab Completion
-
-Command line shell [tab
-completion](https://en.wikipedia.org/wiki/Command-line_completion) is
-automatically enabled on `pinstall` commands and options using
-[`argcomplete`](https://github.com/kislyuk/argcomplete). You may need to
-first (once-only) [activate argcomplete global
-completion](https://github.com/kislyuk/argcomplete#global-completion).
 
 ## License
 

@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# PYTHON_ARGCOMPLETE_OK
 "Installer/utility tool for Python programs."
 
 # Author: Mark Blakeney, Apr 2023.
@@ -9,8 +8,6 @@ import argparse
 import importlib
 import sys
 from pathlib import Path
-
-import argcomplete
 
 PROG = Path(__file__).parent
 
@@ -26,11 +23,12 @@ def main() -> str | None:
         name = modfile.stem
         mod = importlib.import_module(f'{PROG.stem}.commands.{name}')
         docstr = mod.__doc__.strip().split('\n\n')[0] if mod.__doc__ else None
+        aliases = mod.aliases if hasattr(mod, 'aliases') else []
         parser = subparser.add_parser(
             name,
             description=mod.__doc__,
             formatter_class=argparse.RawDescriptionHelpFormatter,
-            help=docstr,
+            aliases=aliases, help=docstr,
         )
 
         progs[name] = parser.prog
@@ -42,9 +40,6 @@ def main() -> str | None:
             mainparser.error(f'"{name}" command must define a main()')
 
         parser.set_defaults(func=mod.main, parser=parser, name=name)
-
-    # Command arguments are now defined, so we can set up argcomplete
-    argcomplete.autocomplete(mainparser)
 
     args = mainparser.parse_args()
 

@@ -15,7 +15,6 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-  "argcomplete",
   "packaging",
   "platformdirs",
   "tomli >= 1.1.0; python_version < '3.11'",
