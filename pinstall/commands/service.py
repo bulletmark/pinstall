@@ -109,6 +109,7 @@ def create_unit(
 
     if not target.exists():
         print(f'### {target} has been installed')
+        target.parent.mkdir(exist_ok=True)
         target.write_text(content)
     elif content != target.read_text():
         print(f'### {target} has been updated')
